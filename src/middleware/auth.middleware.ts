@@ -30,14 +30,17 @@ const verifyLogin = async (
     const error = new Error(errorTypes.USER_DOES_NOT_EXISTS)
     return ctx.app.emit('error', error, ctx)
   }
-  console.log(user)
   // 4.判断密码是否和数据库中的密码是一致(加密)
   if (md5password(password) !== user.password) {
     const error = new Error(errorTypes.PASSWORD_IS_INCORRENT)
     return ctx.app.emit('error', error, ctx)
   }
 
+  // 5. 登录成功修改登录时间
+  await userService.updateLoginTime(user.user_id)
+
   ctx.user = user
+
   await next()
 }
 
@@ -71,9 +74,7 @@ const verifyRegister = async (
     password: md5password(password)
   }
 
-  console.log(userInfo)
   const reg_result = await userService.create(userInfo)
-  console.log(reg_result)
   ctx.user = user
   await next()
 }

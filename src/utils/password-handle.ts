@@ -20,13 +20,13 @@ const guid = () => {
   )
 }
 
-const md5password = (password: string) => {
-  const md5 = crypto.createHash('md5');
-  const result = md5.update(password).digest('hex');
-  return result;
+const md5password = (password: string): string => {
+  const md5 = crypto.createHash('md5')
+  const result = md5.update(password).digest('hex')
+  return result
 }
 
-const generateUserId = () => {
+const generateUserId = (): string => {
   const md5 = crypto.createHash('md5')
   const result = md5.update(guid()).digest('hex')
   return result
