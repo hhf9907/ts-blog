@@ -18,6 +18,7 @@ connections.getConnection((err: NodeJS.ErrnoException, conn: mysql.PoolConnectio
       console.log('数据库连接成功~')
     }
   })
+  
 })
 
 module.exports = connections.promise();

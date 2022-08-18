@@ -5,12 +5,8 @@ const cors = require('koa2-cors')
 
 import useRoutes from '../router'
 import errorHandler from './error-handle'
-// 权限相关
-import tokenConfig from '../utils/token.config'
 
-// http 相应码
-import httpStatusCode from '../constants/http.status'
-
+ 
 const app = new Koa()
 
 

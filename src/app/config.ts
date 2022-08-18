@@ -7,6 +7,10 @@ const PRIVATE_KEY = fs.readFileSync(
 
 const PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, './keys/public.key'))
 
+enum appConfig {
+  PORT = 3000
+}
+
 enum mysqlConfig {
   HOST = '127.0.0.1',
   PORT = '3306',
@@ -15,4 +19,4 @@ enum mysqlConfig {
   PASSWORD = 'root'
 }
 
-export { PRIVATE_KEY, PUBLIC_KEY, mysqlConfig }
+export { PRIVATE_KEY, PUBLIC_KEY, mysqlConfig, appConfig }
