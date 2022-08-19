@@ -117,16 +117,17 @@ const verifyPermission = async (
   console.log('验证权限的middleware~')
   // 1.获取参数 { commentId: '1' }
   const [resourceKey] = Object.keys(ctx.params)
-  const tableName = resourceKey.replace('Id', '')
+  const tableName = resourceKey.replace('Id', 's')
+  
   const resourceId = ctx.params[resourceKey]
-  const { id } = ctx.user
+  const { userId } = ctx.user
 
   // 2.查询是否具备权限
   try {
     const isPermission = await authService.checkResource(
       tableName,
       resourceId,
-      id
+      userId
     )
     if (!isPermission) throw new Error()
     await next()
