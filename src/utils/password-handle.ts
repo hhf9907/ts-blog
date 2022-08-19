@@ -26,10 +26,25 @@ const md5password = (password: string): string => {
   return result
 }
 
+// 生成userId
 const generateUserId = (): string => {
   const md5 = crypto.createHash('md5')
   const result = md5.update(guid()).digest('hex')
   return result
 }
 
-export { md5password, generateUserId }
+// 生成文章id
+const generatePostId = (): string => {
+  const md5 = crypto.createHash('md5')
+  const result = md5.update(guid()).digest('hex')
+  return 'P' + result
+}
+
+// 生成分类id
+const generateCategoryId = (): string => {
+  const md5 = crypto.createHash('md5')
+  const result = md5.update(guid()).digest('hex')
+  return 'C' + result
+}
+
+export { md5password, generateUserId, generatePostId, generateCategoryId }

@@ -31,6 +31,10 @@ const errorHandler = (error: any, ctx: Koa.Context) => {
       status = httpStatusCode.AUTH_ERROR // 参数错误
       message = '您不具备操作的权限~'
       break
+    case errorTypes.CATEGORY_ALREADY_EXISTS:
+      status = 409 // conflict
+      message = '分类已经存在~'
+      break
     default:
       status = httpStatusCode.NOT_FOUND
       message = 'NOT FOUND'

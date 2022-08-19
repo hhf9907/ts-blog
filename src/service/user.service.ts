@@ -14,7 +14,7 @@ class UserService {
    */
   async create(user: IUser) {
     const { userId, name, password } = user
-    const statement = `INSERT INTO users (user_id, name, password, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
+    const statement = `INSERT INTO users (id, name, password, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
     const result = await connection.execute(statement, [userId, name, password])
 
     return result[0]
@@ -38,7 +38,7 @@ class UserService {
    * @returns 
    */
   async updateLoginTime(userId: string) {
-    const statement = `UPDATE users SET recent_login_time = NOW() WHERE user_id = ?;`
+    const statement = `UPDATE users SET recent_login_time = NOW() WHERE id = ?;`
     const result = await connection.execute(statement, [userId])
     return result
   }

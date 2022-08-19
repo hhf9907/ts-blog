@@ -6,13 +6,13 @@ import httpStatusCode from '../constants/http.status'
 
 class AuthController {
   async login(ctx: Koa.DefaultContext, next: () => Promise<any>) {
-    const { user_id, name, avatar, notes } = ctx.user
-    const token = jwt.sign({ user_id, name }, PRIVATE_KEY, {
+    const { id: userId, name, avatar, notes } = ctx.user
+    const token = jwt.sign({ userId, name }, PRIVATE_KEY, {
       expiresIn: 60 * 60 * 24,
       algorithm: 'RS256'
     })
 
-    ctx.body = { user_id, name, avatar, notes, token }
+    ctx.body = { userId, name, avatar, notes, token }
   }
 
   async register(ctx: Koa.DefaultContext, next: () => Promise<any>) {

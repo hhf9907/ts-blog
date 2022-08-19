@@ -37,7 +37,7 @@ const verifyLogin = async (
   }
 
   // 5. 登录成功修改登录时间
-  await userService.updateLoginTime(user.user_id)
+  await userService.updateLoginTime(user.id)
 
   ctx.user = user
 

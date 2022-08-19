@@ -4,7 +4,8 @@ enum errorTypes {
   USER_DOES_NOT_EXISTS = 'user_does_not_exists',
   PASSWORD_IS_INCORRENT = 'password_is_incorrent',
   UNAUTHORIZATION = 'UNAUTHORIZATION',
-  UNPERMISSION = 'unpermission'
+  UNPERMISSION = 'unpermission',
+  CATEGORY_ALREADY_EXISTS = 'category_already_exists'
 }
 
 export default errorTypes
