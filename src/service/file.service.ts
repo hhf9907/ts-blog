@@ -26,7 +26,7 @@ class FileService {
   }
 
   async getAvatarByUserId(userId: string)  {
-    const statement = `SELECT * FROM avatars WHERE user_id = ?;`
+    const statement = `SELECT * FROM avatars WHERE user_id = ? order by id desc;`
     const [result] = await connection.execute(statement, [userId])
     return result[0] 
   }
