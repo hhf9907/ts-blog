@@ -5,7 +5,8 @@ enum errorTypes {
   PASSWORD_IS_INCORRENT = 'password_is_incorrent',
   UNAUTHORIZATION = 'UNAUTHORIZATION',
   UNPERMISSION = 'unpermission',
-  CATEGORY_ALREADY_EXISTS = 'category_already_exists'
+  CATEGORY_ALREADY_EXISTS = 'category_already_exists',
+  PARAMS_IS_REQUIRED = 'paramster_is_required'
 }
 
 export default errorTypes

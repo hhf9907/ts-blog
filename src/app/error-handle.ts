@@ -3,7 +3,7 @@ import errorTypes from '../constants/error-types'
 import httpStatusCode from '../constants/http.status'
 import Koa from 'koa'
 
-const errorHandler = (error: any, ctx: Koa.Context) => {
+const errorHandler = (error: any, ctx: Koa.Context, msg: string) => {
   let status, message
 
   switch (error.message) {
@@ -34,6 +34,10 @@ const errorHandler = (error: any, ctx: Koa.Context) => {
     case errorTypes.CATEGORY_ALREADY_EXISTS:
       status = 409 // conflict
       message = '分类已经存在~'
+      break
+    case errorTypes.PARAMS_IS_REQUIRED:
+      status = 400 // conflict
+      message = msg
       break
     default:
       status = httpStatusCode.NOT_FOUND

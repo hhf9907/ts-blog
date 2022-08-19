@@ -9,8 +9,8 @@ interface IUser {
 class UserService {
   /**
    * 创建用户
-   * @param user 
-   * @returns 
+   * @param user
+   * @returns
    */
   async create(user: IUser) {
     const { userId, name, password } = user
@@ -22,8 +22,8 @@ class UserService {
 
   /**
    * 查询用户
-   * @param name 
-   * @returns 
+   * @param name
+   * @returns
    */
   async getUserByName(name: string) {
     const statement = `SELECT * FROM users WHERE name = ?;`
@@ -33,9 +33,21 @@ class UserService {
   }
 
   /**
+   * 查询用户
+   * @param name
+   * @returns
+   */
+  async getUserById(userId: string) {
+    const statement = `SELECT * FROM users WHERE id = ?;`
+    const result = await connection.execute(statement, [userId])
+
+    return result[0]
+  }
+
+  /**
    * 记录最近的登录时间
-   * @param userId 
-   * @returns 
+   * @param userId
+   * @returns
    */
   async updateLoginTime(userId: string) {
     const statement = `UPDATE users SET recent_login_time = NOW() WHERE id = ?;`
@@ -44,7 +56,7 @@ class UserService {
   }
 
   async updateAvatarUrlById(avatarUrl: string | null, userId: string) {
-    const statement = `UPDATE users SET avatar_url = ? WHERE id = ?;`
+    const statement = `UPDATE users SET avatar = ? WHERE id = ?;`
     const [result] = await connection.execute(statement, [avatarUrl, userId])
     return result
   }

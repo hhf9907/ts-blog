@@ -12,7 +12,14 @@ class CategoryController {
     const { name }: { name: string } = ctx.user
     const categoryId = generateCategoryId()
 
-    // 1.判断分类是否存在的
+    // 1.判断分类名称是否已经传
+    if (!categoryName || !categoryName.trim()) {
+      const error = new Error(errorTypes.PARAMS_IS_REQUIRED)
+      return ctx.app.emit('error', error, ctx, '请输入分类名称~')
+    }
+    
+
+    // 2.判断分类是否存在的
     const result = await service.getCategoryByName(categoryName)
 
     const category = result[0]
@@ -21,7 +28,7 @@ class CategoryController {
       return ctx.app.emit('error', error, ctx)
     }
 
-    // 插入数据
+    // 3.插入数据
     const categoryInfo = {
       categoryName,
       creator: name,
