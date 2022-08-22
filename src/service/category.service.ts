@@ -8,7 +8,7 @@ interface CategoryInfo {
 
 class CategoryService {
   async create(categoryInfo: CategoryInfo) {
-    const statement = `INSERT INTO categorys (id, category_name, creator, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
+    const statement = `INSERT INTO category (id, category_name, creator, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
     const result = await connection.execute(statement, [
       categoryInfo.id,
       categoryInfo.categoryName,
@@ -23,7 +23,7 @@ class CategoryService {
    * @returns
    */
   async getAllCategory() {
-    const statement = `SELECT id AS categoryId, category_name AS categoryName, creator, create_time AS createTime FROM categorys ;`
+    const statement = `SELECT id AS categoryId, category_name AS categoryName, creator, create_time AS createTime FROM category ;`
     const result = await connection.execute(statement)
     return result[0]
   }
@@ -34,7 +34,7 @@ class CategoryService {
    * @returns
    */
   async getCategoryByName(name: string) {
-    const statement = `SELECT * FROM categorys WHERE category_name = ?;`
+    const statement = `SELECT * FROM category WHERE category_name = ?;`
     const result = await connection.execute(statement, [name])
     return result[0]
   }

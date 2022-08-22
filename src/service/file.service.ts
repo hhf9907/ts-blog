@@ -15,7 +15,7 @@ class FileService {
     size: string,
     userId: string
   ) {
-    const statement = `INSERT INTO avatars (filename, mimetype, size, user_id) VALUES (?, ?, ?, ?)`
+    const statement = `INSERT INTO avatar (filename, mimetype, size, user_id) VALUES (?, ?, ?, ?)`
     const [result] = await connection.execute(statement, [
       filename,
       mimetype,
@@ -26,7 +26,7 @@ class FileService {
   }
 
   async getAvatarByUserId(userId: string)  {
-    const statement = `SELECT * FROM avatars WHERE user_id = ? order by id desc;`
+    const statement = `SELECT * FROM avatar WHERE user_id = ? order by id desc;`
     const [result] = await connection.execute(statement, [userId])
     return result[0] 
   }

@@ -9,7 +9,7 @@ class PostService {
     userId: string,
     name: string
   ) {
-    const statement = `INSERT INTO posts (id, user_id, post_name, post_title, content, creator) VALUES (?, ?, ?, ?, ?, ?)`
+    const statement = `INSERT INTO post (id, user_id, post_name, post_title, content, creator) VALUES (?, ?, ?, ?, ?, ?)`
     const result = await connection.execute(statement, [
       postId,
       userId,
@@ -30,7 +30,7 @@ class PostService {
     userId: string,
     name: string
   ) {
-    const statement = `UPDATE posts SET user_id = ?, post_name = ?, post_title = ?, content = ?, creator = ? WHERE id = ?`
+    const statement = `UPDATE post SET user_id = ?, post_name = ?, post_title = ?, content = ?, creator = ? WHERE id = ?`
     const result = await connection.execute(statement, [
       userId,
       postName,
@@ -44,7 +44,7 @@ class PostService {
   }
 
   async delete(postId: string) {
-    const statement = `DELETE FROM posts WHERE id = ?`
+    const statement = `DELETE FROM post WHERE id = ?`
     const result = await connection.execute(statement, [postId])
 
     return result
@@ -59,7 +59,7 @@ class PostService {
     content, creator,
     category_ids AS categoryIds, 
     create_time AS createTime
-    FROM posts WHERE id = ?;`
+    FROM post WHERE id = ?;`
     const result = await connection.execute(statement, [postId])
 
     return result[0]

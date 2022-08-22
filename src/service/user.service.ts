@@ -14,7 +14,7 @@ class UserService {
    */
   async create(user: IUser) {
     const { userId, name, password } = user
-    const statement = `INSERT INTO users (id, name, password, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
+    const statement = `INSERT INTO user (id, name, password, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
     const result = await connection.execute(statement, [userId, name, password])
 
     return result[0]
@@ -26,7 +26,7 @@ class UserService {
    * @returns
    */
   async getUserByName(name: string) {
-    const statement = `SELECT * FROM users WHERE name = ?;`
+    const statement = `SELECT * FROM user WHERE name = ?;`
     const result = await connection.execute(statement, [name])
 
     return result[0]
@@ -38,7 +38,7 @@ class UserService {
    * @returns
    */
   async getUserById(userId: string) {
-    const statement = `SELECT * FROM users WHERE id = ?;`
+    const statement = `SELECT * FROM user WHERE id = ?;`
     const result = await connection.execute(statement, [userId])
 
     return result[0]
@@ -50,13 +50,13 @@ class UserService {
    * @returns
    */
   async updateLoginTime(userId: string) {
-    const statement = `UPDATE users SET recent_login_time = NOW() WHERE id = ?;`
+    const statement = `UPDATE user SET recent_login_time = NOW() WHERE id = ?;`
     const result = await connection.execute(statement, [userId])
     return result
   }
 
   async updateAvatarUrlById(avatarUrl: string | null, userId: string) {
-    const statement = `UPDATE users SET avatar = ? WHERE id = ?;`
+    const statement = `UPDATE user SET avatar = ? WHERE id = ?;`
     const [result] = await connection.execute(statement, [avatarUrl, userId])
     return result
   }

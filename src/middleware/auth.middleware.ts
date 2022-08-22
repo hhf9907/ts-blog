@@ -85,6 +85,7 @@ const verifyAuth = async (
   console.log('验证授权的middleware~')
   // 1.获取token
   const authorization = ctx.headers.authorization
+  
   if (!authorization) {
     const error = new Error(errorTypes.UNAUTHORIZATION)
     return ctx.app.emit('error', error, ctx)
@@ -117,7 +118,7 @@ const verifyPermission = async (
   console.log('验证权限的middleware~')
   // 1.获取参数 { commentId: '1' }
   const [resourceKey] = Object.keys(ctx.params)
-  const tableName = resourceKey.replace('Id', 's')
+  const tableName = resourceKey.replace('Id', '')
   
   const resourceId = ctx.params[resourceKey]
   const { userId } = ctx.user
