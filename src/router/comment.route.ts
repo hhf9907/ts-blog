@@ -7,7 +7,9 @@ const commentRouter = new Router({
 const {
   commentPost,
   replyCommentPost,
-  queryComment
+  queryComment,
+  deleteReplyComment,
+  deleteComment
 } = require('../controller/comment.controller')
 const {
   verifyAuth,
@@ -16,6 +18,18 @@ const {
 
 commentRouter.post('/createComment', verifyAuth, commentPost)
 commentRouter.post('/createReplyComment', verifyAuth, replyCommentPost)
-commentRouter.get('/queryComment', verifyAuth, queryComment)
+commentRouter.delete(
+  '/deleteReplyComment',
+  verifyAuth,
+  verifyPermission,
+  deleteReplyComment
+)
+commentRouter.delete(
+  '/deleteComment',
+  verifyAuth,
+  verifyPermission,
+  deleteComment
+)
+commentRouter.get('/queryComment', queryComment) // 获取评论不需要登录
 
 module.exports = commentRouter

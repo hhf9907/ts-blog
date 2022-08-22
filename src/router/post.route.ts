@@ -17,6 +17,6 @@ const {
 
 postRouter.post('/create', verifyAuth, createPost)
 postRouter.put('/update', verifyAuth, verifyPermission, updatePost)
-postRouter.get('/:postId', verifyAuth, getPost)
+postRouter.get('/:postId', getPost)
 postRouter.delete('/:postId', verifyAuth, verifyPermission, deletePost)
 module.exports = postRouter

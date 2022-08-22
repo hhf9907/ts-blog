@@ -66,7 +66,7 @@ class CommentController {
     try {
       const result = await commentService.queryComment(postId)
 
-      for(let comment of result) {
+      for (let comment of result) {
         const reply = await commentService.queryReplyComment(comment.commentId)
         comment.replyComments = reply
       }
@@ -76,12 +76,50 @@ class CommentController {
         data: result,
         msg: '查询评论成功~'
       }
-   
     } catch (error) {
       ctx.body = {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
-        msg: '评论失败,当前评论不存在~'
+        msg: '查询评论失败~'
+      }
+    }
+  }
+
+  async deleteComment(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // 1.文章信息
+    const { commentId } = ctx.request.query
+    
+    try {
+      await commentService.deleteComment(commentId)
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: null,
+        msg: '删除评论成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '删除评论失败~'
+      }
+    }
+  }
+
+  async deleteReplyComment(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // 1.文章信息
+    const { replyCommentId } = ctx.request.query
+    try {
+      await commentService.deleteReplyComment(replyCommentId)
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: null,
+        msg: '删除评论成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '删除评论失败~'
       }
     }
   }

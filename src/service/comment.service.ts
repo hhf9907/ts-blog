@@ -29,17 +29,16 @@ class CommentService {
   // 查询评论
   async queryComment(postId: string, pageNum = 1) {
     const statement = `SELECT 
-                        id commentId,
-                        post_id postId,
-                        user_id userId,
-                        content content,
-                        create_time createTime
-                      FROM comment
-                      WHERE post_id = ?
-                      ORDER BY commentId DESC
-                      LIMIT ${(pageNum - 1) * 10}, 10 
-                      
-                      `
+      id commentId,
+      post_id postId,
+      user_id userId,
+      content content,
+      create_time createTime
+    FROM comment
+    WHERE post_id = ?
+    ORDER BY commentId DESC
+    LIMIT ${(pageNum - 1) * 10}, 10 
+    `
     const result = await connection.execute(statement, [postId])
     return result[0]
   }
@@ -48,20 +47,33 @@ class CommentService {
   // 查询评论
   async queryReplyComment(commentId: string, pageNum = 1) {
     const statement = `SELECT 
-                        id commentReplyId,
-                        comment_id commentId,
-                        post_id postId,
-                        user_id userId,
-                        content content,
-                        create_time createTime
-                      FROM comment_reply
-                      WHERE comment_id = ?
-                      ORDER BY commentReplyId DESC
-                      LIMIT ${(pageNum - 1) * 10}, 10 
-                      
-                      `
+      id commentReplyId,
+      comment_id commentId,
+      post_id postId,
+      user_id userId,
+      content content,
+      create_time createTime
+    FROM comment_reply
+    WHERE comment_id = ?
+    ORDER BY commentReplyId DESC
+    LIMIT ${(pageNum - 1) * 10}, 10 
+    `
     const result = await connection.execute(statement, [commentId])
     return result[0]
+  }
+
+  // 删除评论
+  async deleteComment(commentId: number) {
+    const statement = `DELETE FROM comment WHERE id = ?`
+    const result = await connection.execute(statement, [commentId])
+    return result
+  }
+
+  // 删除评论
+  async deleteReplyComment(replyCommentId: number) {
+    const statement = `DELETE FROM comment_reply WHERE id = ?`
+    const result = await connection.execute(statement, [replyCommentId])
+    return result
   }
 }
 
