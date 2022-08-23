@@ -3,14 +3,12 @@ import Koa from 'koa'
 import httpStatusCode from '../constants/http.status'
 
 import service from '../service/category.service'
-import { generateCategoryId } from '../utils/password-handle'
 import errorTypes from '../constants/error-types'
 
 class CategoryController {
   async createCategory(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { categoryName }: { categoryName: string } = ctx.request.body
     const { name }: { name: string } = ctx.user
-    const categoryId = generateCategoryId()
 
     // 1.判断分类名称是否已经传
     if (!categoryName || !categoryName.trim()) {
@@ -31,8 +29,7 @@ class CategoryController {
     // 3.插入数据
     const categoryInfo = {
       categoryName,
-      creator: name,
-      id: categoryId
+      creator: name
     }
 
     try {

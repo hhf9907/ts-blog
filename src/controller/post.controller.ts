@@ -69,7 +69,7 @@ class PostController {
       // 删除评论
       await commentService.deleteCommentByPostId(postId)
       await commentService.deleteReplyByPostId(postId)
-      
+
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: null,
@@ -99,6 +99,41 @@ class PostController {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
         msg: '获取文章失败~'
+      }
+    }
+  }
+
+  // 查询文章列表
+  async getPostList(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // queryType 1 最新， 2 最热
+    const {
+      pageNum,
+      pageSize,
+      keyword='',
+      queryType = 1,
+      categoryId
+    } = ctx.request.query
+
+    const params = {
+      pageNum,
+      pageSize,
+      keyword,
+      queryType,
+      categoryId
+    }
+
+    try {
+      const postList = await postService.queryPostList(params)
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: postList,
+        msg: '获取文章列表成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取文章列表失败~'
       }
     }
   }

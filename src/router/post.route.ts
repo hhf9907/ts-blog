@@ -8,7 +8,8 @@ const {
   createPost,
   getPost,
   updatePost,
-  deletePost
+  deletePost,
+  getPostList
 } = require('../controller/post.controller')
 const {
   verifyAuth,
@@ -17,6 +18,7 @@ const {
 
 postRouter.post('/create', verifyAuth, createPost)
 postRouter.put('/update', verifyAuth, verifyPermission, updatePost)
-postRouter.get('/:postId', getPost)
+postRouter.get('/getPostById/:postId', getPost)
+postRouter.get('/list', getPostList)
 postRouter.delete('/:postId', verifyAuth, verifyPermission, deletePost)
 module.exports = postRouter

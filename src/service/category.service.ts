@@ -1,16 +1,14 @@
 const connection = require('../app/database')
 
 interface CategoryInfo {
-  id: string
   categoryName: string
   creator: string
 }
 
 class CategoryService {
   async create(categoryInfo: CategoryInfo) {
-    const statement = `INSERT INTO category (id, category_name, creator, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
+    const statement = `INSERT INTO category (category_name, creator) VALUES (?, ?);`
     const result = await connection.execute(statement, [
-      categoryInfo.id,
       categoryInfo.categoryName,
       categoryInfo.creator
     ])
