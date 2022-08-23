@@ -62,11 +62,11 @@ class CommentController {
   }
 
   async queryComment(ctx: Koa.DefaultContext, next: () => Promise<any>) {
-    const { postId } = ctx.request.query
+    const { postId, pageNum = 1 } = ctx.request.query
     try {
-      const result = await commentService.queryComment(postId)
+      const result = await commentService.queryComment(postId, pageNum)
 
-      for (let comment of result) {
+      for (let comment of result.list) {
         const reply = await commentService.queryReplyComment(comment.commentId)
         comment.replyComments = reply
       }
@@ -87,10 +87,11 @@ class CommentController {
 
   async deleteComment(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { commentId } = ctx.request.query
-    
+    const { commentId } = ctx.params
+    console.log(commentId)
     try {
       await commentService.deleteComment(commentId)
+      await commentService.deleteReplyByCommentId(commentId)
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: null,
@@ -107,9 +108,9 @@ class CommentController {
 
   async deleteReplyComment(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { replyCommentId } = ctx.request.query
+    const { comment_replyId } = ctx.params
     try {
-      await commentService.deleteReplyComment(replyCommentId)
+      await commentService.deleteReplyComment(comment_replyId)
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: null,

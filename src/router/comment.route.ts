@@ -19,13 +19,13 @@ const {
 commentRouter.post('/createComment', verifyAuth, commentPost)
 commentRouter.post('/createReplyComment', verifyAuth, replyCommentPost)
 commentRouter.delete(
-  '/deleteReplyComment',
+  '/deleteReplyComment/:comment_replyId',
   verifyAuth,
   verifyPermission,
   deleteReplyComment
 )
 commentRouter.delete(
-  '/deleteComment',
+  '/deleteComment/:commentId',
   verifyAuth,
   verifyPermission,
   deleteComment

@@ -28,7 +28,7 @@ class CommentService {
 
   // 查询评论
   async queryComment(postId: string, pageNum = 1) {
-    const statement = `SELECT 
+    const statement = `SELECT SQL_CALC_FOUND_ROWS
       id commentId,
       post_id postId,
       user_id userId,
@@ -37,10 +37,17 @@ class CommentService {
     FROM comment
     WHERE post_id = ?
     ORDER BY commentId DESC
-    LIMIT ${(pageNum - 1) * 10}, 10 
+    LIMIT ${(pageNum - 1) * 10}, 10;
     `
+    const query = `select FOUND_ROWS() as count;`
     const result = await connection.execute(statement, [postId])
-    return result[0]
+    const result1 = await connection.execute(query)
+    const count = result1[0][0].count
+    return {
+      list: result[0],
+      count: count,
+      pages: Math.ceil(count / 10)
+    }
   }
 
   // 查询回复评论
@@ -56,8 +63,8 @@ class CommentService {
     FROM comment_reply
     WHERE comment_id = ?
     ORDER BY commentReplyId DESC
-    LIMIT ${(pageNum - 1) * 10}, 10 
     `
+    // LIMIT ${(pageNum - 1) * 10}, 10 
     const result = await connection.execute(statement, [commentId])
     return result[0]
   }
@@ -65,6 +72,27 @@ class CommentService {
   // 删除评论
   async deleteComment(commentId: number) {
     const statement = `DELETE FROM comment WHERE id = ?`
+    const result = await connection.execute(statement, [commentId])
+    return result
+  }
+
+  // 根据postId删除评论
+  async deleteCommentByPostId(postId: string) {
+    const statement = `DELETE FROM comment WHERE post_id = ?`
+    const result = await connection.execute(statement, [postId])
+    return result
+  }
+
+  // 根据postId删除评论
+  async deleteReplyByPostId(postId: string) {
+    const statement = `DELETE FROM comment_reply WHERE post_id = ?`
+    const result = await connection.execute(statement, [postId])
+    return result
+  }
+
+  // 根据commentId删除评论
+  async deleteReplyByCommentId(commentId: number) {
+    const statement = `DELETE FROM comment_reply WHERE comment_id = ?`
     const result = await connection.execute(statement, [commentId])
     return result
   }

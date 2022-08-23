@@ -2,6 +2,7 @@ import Koa from 'koa'
 import httpStatusCode from '../constants/http.status'
 import { generatePostId } from '../utils/password-handle'
 import postService from '../service/post.service'
+import commentService from '../service/comment.service'
 class PostController {
   async createPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
@@ -64,6 +65,11 @@ class PostController {
     const { postId } = ctx.params
     try {
       await postService.delete(postId)
+
+      // 删除评论
+      await commentService.deleteCommentByPostId(postId)
+      await commentService.deleteReplyByPostId(postId)
+      
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: null,
