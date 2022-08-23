@@ -91,7 +91,6 @@ const verifyAuth = async (
     return ctx.app.emit('error', error, ctx)
   }
   const token = authorization
-
   // 2.验证token(id/name/iat/exp)
   try {
     const result = jwt.verify(token, PUBLIC_KEY, {
@@ -100,6 +99,7 @@ const verifyAuth = async (
     ctx.user = result
     await next()
   } catch (err) {
+    console.log(err)
     const error = new Error(errorTypes.UNAUTHORIZATION)
     ctx.app.emit('error', error, ctx)
   }

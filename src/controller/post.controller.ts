@@ -133,7 +133,7 @@ class PostController {
       ctx.body = {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
-        msg: '获取文章列表失败~'
+        msg: '获取文章列表失败,请检查参数是否有误~'
       }
     }
   }

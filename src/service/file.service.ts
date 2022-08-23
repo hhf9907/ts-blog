@@ -35,16 +35,14 @@ class FileService {
     filename: string,
     mimetype: string,
     size: string,
-    userId: string,
-    momentId: string
+    userId: string
   ) {
-    const statement = `INSERT INTO file (filename, mimetype, size, user_id, moment_id) VALUES (?, ?, ?, ?, ?)`
+    const statement = `INSERT INTO file (filename, mimetype, size, user_id) VALUES (?, ?, ?, ?)`
     const [result] = await connection.execute(statement, [
       filename,
       mimetype,
       size,
-      userId,
-      momentId
+      userId
     ])
     return result
   }

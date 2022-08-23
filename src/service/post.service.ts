@@ -100,7 +100,7 @@ class PostService {
         : ``
     }
     ORDER BY ${Number(params.queryType) === 1 ? 'createTime' : 'pv'} DESC
-    LIMIT ${(pageNum - 1) * 10}, ${(pageNum - 1) * 10 + pageSize};
+    LIMIT ${(pageNum - 1) * pageSize}, ${pageSize};
     `
     
     const query = `select FOUND_ROWS() as count;`

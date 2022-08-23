@@ -6,7 +6,6 @@ import userService from '../service/user.service'
 import httpStatusCode from '../constants/http.status'
 import { appConfig } from '../app/config'
 import filePath from '../constants/file-path'
-
 class FileController {
   async saveAvatarInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.获取图像相关的信息
@@ -35,23 +34,46 @@ class FileController {
 
     // 提供图像信息
     ctx.response.set('content-type', avatarInfo.mimetype) // 设置文件类型
-    ctx.body = fs.createReadStream(`${filePath.AVATAR_PATH}/${avatarInfo.filename}`)
+    ctx.body = fs.createReadStream(
+      `${filePath.AVATAR_PATH}/${avatarInfo.filename}`
+    )
   }
 
   // 保存图像相关信息
   async savePictureInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.获取图像信息
     const files = ctx.req.files
-    const { id } = ctx.user
-    const { momentId } = ctx.query
-
+    const { userId } = ctx.user
     // 2.将所有的文件信息保存到数据库中
     for (let file of files) {
       const { filename, mimetype, size } = file
-      await fileService.createFile(filename, mimetype, size, id, momentId)
+      await fileService.createFile(filename, mimetype, size, userId)
     }
 
-    ctx.body = '动态配图上传完成~'
+    const fileNames = files.map(
+      (file: any) => {
+        return `${appConfig.HOST}:${appConfig.PORT}/file/images/${file.filename}`
+      }
+    )
+    
+    ctx.body = {
+      code: httpStatusCode.SUCCESS,
+      data: fileNames,
+      msg: '图片上传成功~'
+    }
+  }
+
+  async fileInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    let { filename } = ctx.params
+    const fileInfo = await fileService.getFileByFilename(filename)
+    const { type } = ctx.query
+    const types = ['small', 'middle', 'large']
+    if (types.some((item) => item === type)) {
+      filename = filename + '-' + type
+    }
+
+    ctx.response.set('content-type', fileInfo.mimetype)
+    ctx.body = fs.createReadStream(`${filePath.PICTURE_PATH}/${filename}`)
   }
 }
 
