@@ -24,6 +24,6 @@ uploadRouter.post(
   savePictureInfo
 )
 // 动态配图的服务
-uploadRouter.get('/file/images/:filename', fileInfo)
+uploadRouter.get('/file/files/:filename', fileInfo)
 
 module.exports = uploadRouter

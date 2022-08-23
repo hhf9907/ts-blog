@@ -52,7 +52,7 @@ class FileController {
 
     const fileNames = files.map(
       (file: any) => {
-        return `${appConfig.HOST}:${appConfig.PORT}/file/images/${file.filename}`
+        return `${appConfig.HOST}:${appConfig.PORT}/file/files/${file.filename}`
       }
     )
     
