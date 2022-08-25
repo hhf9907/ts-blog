@@ -158,7 +158,7 @@ const verifyPermission = async (
 //   }
 // }
 
-module.exports = {
+export {
   verifyLogin,
   verifyRegister,
   verifyAuth,

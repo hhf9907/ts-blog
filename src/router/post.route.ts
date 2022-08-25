@@ -1,24 +1,25 @@
 import Router from 'koa-router'
 
+import postController from '../controller/post.controller'
+import { verifyPermission, verifyAuth } from '../middleware/auth.middleware'
+
 const postRouter = new Router({
   prefix: '/post'
 })
 
-const {
-  createPost,
-  getPost,
-  updatePost,
-  deletePost,
-  getPostList
-} = require('../controller/post.controller')
-const {
+postRouter.post('/create', verifyAuth, postController.createPost)
+postRouter.put(
+  '/update',
   verifyAuth,
-  verifyPermission
-} = require('../middleware/auth.middleware')
-
-postRouter.post('/create', verifyAuth, createPost)
-postRouter.put('/update', verifyAuth, verifyPermission, updatePost)
-postRouter.get('/getPostById/:postId', getPost)
-postRouter.get('/list', getPostList)
-postRouter.delete('/:postId', verifyAuth, verifyPermission, deletePost)
+  verifyPermission,
+  postController.updatePost
+)
+postRouter.get('/getPostById/:postId', postController.getPost)
+postRouter.get('/list', postController.getPostList)
+postRouter.delete(
+  '/:postId',
+  verifyAuth,
+  verifyPermission,
+  postController.deletePost
+)
 module.exports = postRouter

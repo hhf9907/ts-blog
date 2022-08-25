@@ -1,16 +1,17 @@
 import Router from 'koa-router'
+
+import { verifyAuth } from '../middleware/auth.middleware'
+import categoryController from '../controller/category.controller'
+
 const categoryRouter = new Router({
   prefix: '/category'
 })
 
-const { verifyAuth } = require('../middleware/auth.middleware')
-
-const {
-  createCategory,
-  getAllCategory
-} = require('../controller/category.controller')
-
-categoryRouter.post('/create', verifyAuth, createCategory)
-categoryRouter.get('/getAllCategory', verifyAuth, getAllCategory)
+categoryRouter.post('/create', verifyAuth, categoryController.createCategory)
+categoryRouter.get(
+  '/getAllCategory',
+  verifyAuth,
+  categoryController.getAllCategory
+)
 
 module.exports = categoryRouter

@@ -1,35 +1,30 @@
 import Router from 'koa-router'
 
+import commentController from '../controller/comment.controller'
+import { verifyPermission, verifyAuth } from '../middleware/auth.middleware'
+
 const commentRouter = new Router({
   prefix: '/comment'
 })
 
-const {
-  commentPost,
-  replyCommentPost,
-  queryComment,
-  deleteReplyComment,
-  deleteComment
-} = require('../controller/comment.controller')
-const {
+commentRouter.post('/createComment', verifyAuth, commentController.commentPost)
+commentRouter.post(
+  '/createReplyComment',
   verifyAuth,
-  verifyPermission
-} = require('../middleware/auth.middleware')
-
-commentRouter.post('/createComment', verifyAuth, commentPost)
-commentRouter.post('/createReplyComment', verifyAuth, replyCommentPost)
+  commentController.replyCommentPost
+)
 commentRouter.delete(
   '/deleteReplyComment/:comment_replyId',
   verifyAuth,
   verifyPermission,
-  deleteReplyComment
+  commentController.deleteReplyComment
 )
 commentRouter.delete(
   '/deleteComment/:commentId',
   verifyAuth,
   verifyPermission,
-  deleteComment
+  commentController.deleteComment
 )
-commentRouter.get('/queryComment', queryComment) // 获取评论不需要登录
+commentRouter.get('/queryComment', commentController.queryComment) // 获取评论不需要登录
 
 module.exports = commentRouter

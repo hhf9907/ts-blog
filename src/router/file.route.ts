@@ -1,29 +1,29 @@
 import Router from 'koa-router'
-const uploadRouter = new Router()
 
-const { verifyAuth } = require('../middleware/auth.middleware')
-const {
+import { verifyAuth } from '../middleware/auth.middleware'
+import {
   avatarHandler,
   pictureResize,
   pictureHandler
-} = require('../middleware/file.middleware')
+} from '../middleware/file.middleware'
+import fileController from '../controller/file.controller'
 
-const {
-  saveAvatarInfo,
-  savePictureInfo,
-  fileInfo
-} = require('../controller/file.controller')
+const uploadRouter = new Router()
 
-
-uploadRouter.post('/upload/avatar', verifyAuth, avatarHandler, saveAvatarInfo)
+uploadRouter.post(
+  '/upload/avatar',
+  verifyAuth,
+  avatarHandler,
+  fileController.saveAvatarInfo
+)
 uploadRouter.post(
   '/upload/picture',
   verifyAuth,
   pictureHandler,
   pictureResize,
-  savePictureInfo
+  fileController.savePictureInfo
 )
 // 动态配图的服务
-uploadRouter.get('/file/files/:filename', fileInfo)
+uploadRouter.get('/file/files/:filename', fileController.fileInfo)
 
 module.exports = uploadRouter

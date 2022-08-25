@@ -47,7 +47,7 @@ const pictureResize = async (
 }
 
 
-module.exports = {
+export{
   avatarHandler,
   pictureHandler,
   pictureResize

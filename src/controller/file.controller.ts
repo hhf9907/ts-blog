@@ -43,19 +43,15 @@ class FileController {
   async savePictureInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.获取图像信息
     const files = ctx.req.files
+    const fileNames = []
     const { userId } = ctx.user
     // 2.将所有的文件信息保存到数据库中
     for (let file of files) {
       const { filename, mimetype, size } = file
       await fileService.createFile(filename, mimetype, size, userId)
+      fileNames.push( `${appConfig.HOST}:${appConfig.PORT}/file/files/${filename}`)
     }
 
-    const fileNames = files.map(
-      (file: any) => {
-        return `${appConfig.HOST}:${appConfig.PORT}/file/files/${file.filename}`
-      }
-    )
-    
     ctx.body = {
       code: httpStatusCode.SUCCESS,
       data: fileNames,
@@ -77,4 +73,4 @@ class FileController {
   }
 }
 
-module.exports = new FileController()
+export default new FileController()

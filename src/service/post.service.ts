@@ -74,7 +74,6 @@ class PostService {
   }
 
   async queryPostList(params: queryCategoryParams) {
-    
     const pageNum = Number(params.pageNum)
     const pageSize = Number(params.pageSize)
     const statement = `SELECT SQL_CALC_FOUND_ROWS
@@ -86,23 +85,32 @@ class PostService {
     category_ids AS categoryIds, 
     create_time AS createTime
     FROM post 
-    ${params.keyword || params.categoryId ? 'WHERE' : ''}
+    ${params.keyword || params.categoryId ? 'WHERE ' : ''}
     ${
       // 关键字查询
       params.keyword
-        ? `postName = ${params.keyword} || postTitle = ${params.keyword} || content = ${params.keyword}  || creator = ${params.keyword}`
+        ? `(
+          post_name LIKE '%${params.keyword}%' || 
+          post_title LIKE '%${params.keyword}%' || 
+          content LIKE '%${params.keyword}%' || 
+          creator LIKE '%${params.keyword}%'
+        )`
         : ``
     }
+    ${params.keyword && params.categoryId ? 'AND' : ''}
     ${
       // 查询分类
       params.categoryId
-        ? `category_ids LIKE '%,${params.categoryId},%' || category_ids LIKE '%${params.categoryId},%' || category_ids LIKE '%,${params.categoryId}%'`
+        ? `(category_ids LIKE '%,${params.categoryId},%' || 
+          category_ids LIKE '%${params.categoryId},%' || 
+          category_ids LIKE '%,${params.categoryId}%'
+          )`
         : ``
     }
-    ORDER BY ${Number(params.queryType) === 1 ? 'createTime' : 'pv'} DESC
+    ORDER BY ${Number(params.queryType) === 1 ? 'create_time' : 'pv'} DESC
     LIMIT ${(pageNum - 1) * pageSize}, ${pageSize};
     `
-    
+
     const query = `select FOUND_ROWS() as count;`
     const result = await connection.execute(statement)
     const result1 = await connection.execute(query)
@@ -110,7 +118,7 @@ class PostService {
     return {
       list: result[0],
       count: count,
-      pages: Math.ceil(count / 10)
+      pages: Math.ceil(count / 10) // 向上取整
     }
   }
 }

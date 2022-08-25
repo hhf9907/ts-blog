@@ -4,7 +4,6 @@ import { mysqlConfig } from './config'
 
 const connections = mysql.createPool({
   host: mysqlConfig.HOST,
-  port: 3306,
   database: mysqlConfig.DATABASE,
   user: mysqlConfig.USER,
   password: mysqlConfig.PASSWORD

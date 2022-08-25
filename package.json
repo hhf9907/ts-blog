@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "start": "tsc dist/index.ts",
+    "start": "node dist/index.js",
     "build": "tsc",
-    "dev": "ts-node-dev --respawn   src/index.ts"
+    "dev": "ts-node-dev --respawn src/index.ts"
   },
   "devDependencies": {
     "@types/koa": "^2.13.5",

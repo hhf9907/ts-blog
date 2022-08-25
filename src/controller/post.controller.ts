@@ -139,4 +139,4 @@ class PostController {
   }
 }
 
-module.exports = new PostController()
+export default new PostController()
