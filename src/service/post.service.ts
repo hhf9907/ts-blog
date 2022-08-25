@@ -12,17 +12,17 @@ class PostService {
   async create(
     postId: string,
     postName: string,
-    postTitle: string,
+    postIntro: string,
     content: string,
     userId: string,
     name: string
   ) {
-    const statement = `INSERT INTO post (id, user_id, post_name, post_title, content, creator) VALUES (?, ?, ?, ?, ?, ?)`
+    const statement = `INSERT INTO post (id, user_id, post_name, post_intro, content, creator) VALUES (?, ?, ?, ?, ?, ?)`
     const result = await connection.execute(statement, [
       postId,
       userId,
       postName,
-      postTitle,
+      postIntro,
       content,
       name
     ])
@@ -33,16 +33,16 @@ class PostService {
   async update(
     postId: string,
     postName: string,
-    postTitle: string,
+    postIntro: string,
     content: string,
     userId: string,
     name: string
   ) {
-    const statement = `UPDATE post SET user_id = ?, post_name = ?, post_title = ?, content = ?, creator = ? WHERE id = ?`
+    const statement = `UPDATE post SET user_id = ?, post_name = ?, post_intro = ?, content = ?, creator = ? WHERE id = ?`
     const result = await connection.execute(statement, [
       userId,
       postName,
-      postTitle,
+      postIntro,
       content,
       name,
       postId
@@ -63,7 +63,7 @@ class PostService {
     id AS postId, 
     user_id AS userId, 
     post_name AS postName, 
-    post_title AS postTitle, 
+    post_intro AS postIntro, 
     content, creator,
     category_ids AS categoryIds, 
     create_time AS createTime
@@ -80,7 +80,7 @@ class PostService {
     id AS postId, 
     user_id AS userId, 
     post_name AS postName, 
-    post_title AS postTitle, 
+    post_intro AS postIntro, 
     content, creator, pv,
     category_ids AS categoryIds, 
     create_time AS createTime
@@ -91,7 +91,7 @@ class PostService {
       params.keyword
         ? `(
           post_name LIKE '%${params.keyword}%' || 
-          post_title LIKE '%${params.keyword}%' || 
+          post_intro LIKE '%${params.keyword}%' || 
           content LIKE '%${params.keyword}%' || 
           creator LIKE '%${params.keyword}%'
         )`

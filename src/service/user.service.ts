@@ -14,8 +14,8 @@ class UserService {
    */
   async create(user: IUser) {
     const { userId, name, password } = user
-    const statement = `INSERT INTO user (id, name, password, update_time, create_time) VALUES (?, ?, ?, NOW(),NOW());`
-    const result = await connection.execute(statement, [userId, name, password])
+    const statement = `INSERT INTO user (id, name, nickname, password, update_time, create_time) VALUES (?, ?, ?, ?, NOW(),NOW());`
+    const result = await connection.execute(statement, [userId, name,name, password])
 
     return result[0]
   }

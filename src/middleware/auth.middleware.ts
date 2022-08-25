@@ -7,6 +7,8 @@ import authService from '../service/auth.service'
 import userService from '../service/user.service'
 import { md5password, generateUserId } from '../utils/password-handle'
 import errorTypes from '../constants/error-types'
+import userStatus from '../constants/user.status'
+import userTypes from '../constants/user.type'
 
 const verifyLogin = async (
   ctx: Koa.DefaultContext,
@@ -35,7 +37,17 @@ const verifyLogin = async (
     return ctx.app.emit('error', error, ctx)
   }
 
-  // 5. 登录成功修改登录时间
+  // 5.判断用户状态是否正常
+  if (user.status !== userStatus.NORMAL) {
+    const error = new Error(errorTypes.USER_ERROR)
+    const msg =
+      user.status === userStatus.FREEZE
+        ? '当前用户已被冻结,请联系管理人员解封~'
+        : '当前用户已被永久封号~'
+    return ctx.app.emit('error', error, ctx, msg)
+  }
+
+  // 6. 登录成功修改登录时间
   await userService.updateLoginTime(user.id)
 
   ctx.user = user
@@ -121,21 +133,27 @@ const verifyPermission = async (
   const tableName = resourceKey.replace('Id', '')
   
   const resourceId = ctx.params[resourceKey]
-  const { userId } = ctx.user
+  const { userId, type } = ctx.user
 
-  // 2.查询是否具备权限
-  try {
-    const isPermission = await authService.checkResource(
-      tableName,
-      resourceId,
-      userId
-    )
-    if (!isPermission) throw new Error()
+  // 普通用户需要验证是否为自己创建的
+  if (type === userTypes.GENERAL) {
+    // 2.查询是否具备权限
+    try {
+      const isPermission = await authService.checkResource(
+        tableName,
+        resourceId,
+        userId
+      )
+      if (!isPermission) throw new Error()
+      await next()
+    } catch (err) {
+      const error = new Error(errorTypes.UNPERMISSION)
+      return ctx.app.emit('error', error, ctx)
+    }
+  }else { // 管理员可直接操作
     await next()
-  } catch (err) {
-    const error = new Error(errorTypes.UNPERMISSION)
-    return ctx.app.emit('error', error, ctx)
   }
+    
 }
 
 // const verifyPermission = (tableName) => {

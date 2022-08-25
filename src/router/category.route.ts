@@ -10,7 +10,6 @@ const categoryRouter = new Router({
 categoryRouter.post('/create', verifyAuth, categoryController.createCategory)
 categoryRouter.get(
   '/getAllCategory',
-  verifyAuth,
   categoryController.getAllCategory
 )
 

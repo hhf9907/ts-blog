@@ -6,13 +6,17 @@ import httpStatusCode from '../constants/http.status'
 
 class AuthController {
   async login(ctx: Koa.DefaultContext, next: () => Promise<any>) {
-    const { id: userId, name, avatar, notes } = ctx.user
-    const token = jwt.sign({ userId, name }, PRIVATE_KEY, {
+    const { id: userId, name, nickname, avatar, notes, status, type } = ctx.user
+    const token = jwt.sign({ userId, name, type }, PRIVATE_KEY, {
       expiresIn: 60 * 60 * 24,
       algorithm: 'RS256'
     })
 
-    ctx.body = { userId, name, avatar, notes, token }
+    ctx.body = {
+      code: httpStatusCode.SUCCESS,
+      data: { userId, status, type, name, nickname, avatar, notes, token },
+      msg: '登陆成功'
+    }
   }
 
   async register(ctx: Koa.DefaultContext, next: () => Promise<any>) {

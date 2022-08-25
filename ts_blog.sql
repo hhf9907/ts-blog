@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50729
 File Encoding         : 65001
 
-Date: 2022-08-23 17:57:55
+Date: 2022-08-25 18:02:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -87,7 +87,6 @@ CREATE TABLE `comment` (
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
-INSERT INTO `comment` VALUES ('11', 'Pe733b68cbce0b3e5757998d8977a0228', 'e431cd38a0876f8e83fd3e4700adf0f5', '哈哈哈哈的评论', '2022-08-23 10:57:45', '0');
 INSERT INTO `comment` VALUES ('12', 'Pe733b68cbce0b3e5757998d8977a0228', 'e431cd38a0876f8e83fd3e4700adf0f5', '哈哈哈哈的评论', '2022-08-23 10:57:47', '0');
 INSERT INTO `comment` VALUES ('13', 'Pe733b68cbce0b3e5757998d8977a0228', 'e431cd38a0876f8e83fd3e4700adf0f5', '哈哈哈哈的评论', '2022-08-23 10:57:47', '0');
 INSERT INTO `comment` VALUES ('14', 'Pe733b68cbce0b3e5757998d8977a0228', 'e431cd38a0876f8e83fd3e4700adf0f5', '哈哈哈哈的评论', '2022-08-23 10:57:48', '0');
@@ -139,7 +138,7 @@ CREATE TABLE `file` (
   UNIQUE KEY `filename` (`filename`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `file_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of file
@@ -206,6 +205,21 @@ INSERT INTO `file` VALUES ('59', 'bee952139791db8777115e86c4a990d3', 'image/jpeg
 INSERT INTO `file` VALUES ('60', 'bf2006f14cce3032148135a0aba288c0', 'image/webp', '21210', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-23 17:16:10');
 INSERT INTO `file` VALUES ('61', 'd9d3db30fe9e04d663a01dee6ef2f558', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '13147', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-23 17:24:51');
 INSERT INTO `file` VALUES ('62', '94fd9f38357fa9779866d560cf41f219', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', '13147', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-23 17:34:47');
+INSERT INTO `file` VALUES ('63', '16738fff482baaa125f00e5c3b07a39a', 'image/jpeg', '6820', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('64', 'e34cbe9335559f1c23f1230e18e6a651', 'image/png', '18108', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('65', 'd334db3a70a72a4784bcb9ce948ac3ca', 'image/png', '8106', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('66', 'd5d436c9b71de8f3aa40a8ea35c1bbfe', 'image/jpeg', '52444', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('67', '209bf34f0aaa2880b7fdcccdcddd41c3', 'image/webp', '21210', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('68', 'c02db32325a4deacdfd4c47988c1fa6f', 'image/png', '10174', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('69', '30838d108d82bde19490a750aec229c5', 'image/png', '45073', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('70', 'b40f183255178f6004ac8ff139a43761', 'image/png', '14869', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 13:47:56');
+INSERT INTO `file` VALUES ('71', 'a6f25e2ad479485778be9198b963da67', 'video/mp4', '31175850', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 14:26:31');
+INSERT INTO `file` VALUES ('72', '43459c01240a3726bb12c13d950a6043', 'video/mp4', '661908', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 14:26:59');
+INSERT INTO `file` VALUES ('73', '3d97e1a25e0a9de9477fe6d62a708e17', 'image/png', '80557', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 15:51:01');
+INSERT INTO `file` VALUES ('74', 'e28b09024d73b9ad67644e749ee70789', 'image/jpeg', '264313', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 15:51:02');
+INSERT INTO `file` VALUES ('75', 'f3c41e5e28a2c43d400f904b00d5bcce', 'image/png', '518788', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 15:51:02');
+INSERT INTO `file` VALUES ('76', '3392f4ad35d97df4ac82218527198746', 'video/mp4', '50156883', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 16:11:19');
+INSERT INTO `file` VALUES ('77', '20ac558087a39ae5ace78d71473ca310', 'video/mp4', '50156883', 'e431cd38a0876f8e83fd3e4700adf0f5', '2022-08-24 16:15:14');
 
 -- ----------------------------
 -- Table structure for post
@@ -214,8 +228,8 @@ DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
   `id` varchar(50) NOT NULL,
   `user_id` varchar(50) NOT NULL,
-  `post_name` varchar(100) NOT NULL,
-  `post_title` varchar(100) NOT NULL,
+  `post_name` varchar(150) NOT NULL,
+  `post_intro` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `creator` varchar(50) DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -231,6 +245,7 @@ CREATE TABLE `post` (
 -- ----------------------------
 INSERT INTO `post` VALUES ('P4839c497967d570eea03694376fa0a5c', 'e431cd38a0876f8e83fd3e4700adf0f5', '111', '222', '333', 'admin', '2022-08-23 14:53:15', '2022-08-23 10:57:12', null, '111');
 INSERT INTO `post` VALUES ('P8a1030305c594c70818090477321f9e5', 'e431cd38a0876f8e83fd3e4700adf0f5', '111', '222', '333', 'admin', '2022-08-23 14:53:13', '2022-08-23 10:57:11', null, '13');
+INSERT INTO `post` VALUES ('P90a657a7c6ac9c3da3645dfbf9adb8ba', 'e431cd38a0876f8e83fd3e4700adf0f5', 'JavaScript中的this绑定', '在日常的开发中，我们会经常使用JavaScript中的一个关键字：this，在常见的编程语言中，几乎都有this这个关键字，但是JavaScript中的this和常见的变成语言中的this不太一样，\n在常见的变成语言（java，c++等）中，this通常只会出现在类的方法中，而this指向它当前调用的对象，但是在JavaScript中，this是更加灵活的，无论是它出现的位置还是它代表的含义。', '## JavaScript中的this绑定\n\n在日常的开发中，我们会经常使用JavaScript中的一个关键字：this，在常见的编程语言中，几乎都有this这个关键字，但是JavaScript中的this和常见的变成语言中的this不太一样，\n在常见的变成语言（java，c++等）中，this通常只会出现在类的方法中，而this指向它当前调用的对象，但是在JavaScript中，this是更加灵活的，无论是它出现的位置还是它代表的含义。\n\n### this全局作用下的指向\n\n这个问题非常容易回答，在浏览器中，this的指向为全局对象window\n\n```js\nconsole.log(this) // window 对象\n\nvar name = \"hhf\"\n\nconsole.log(this.name) // hhf\nconsole.log(window.name) // hhf\n```\n\n但是，开发中很少直接在全局作用于下去使用this，通常都是在函数中使用的\n\n### this到底指向什么呢？\n\n下面我们通过一段代码，代码中，我们定义一个函数，对他进行三种不同的方式进行调用，它产生了不同的结果\n\n```js\nfunction foo() {\n  console.log(this)\n}\n\nfoo() // window对象\n\nconst obj = {\n  name: \"hhf\",\n  foo: foo\n}\n\nobj.foo() // obj1\n\nconst obj2 = {}\n\nfoo.call(obj2) // obj2\n```\n\n从上面代码运行的结果我们得出：\n\n1.函数在调用时，JavaScript会默认给this绑定一个值；\n2.this的绑定和定义的位置（编写的位置）没有关系；\n3.this的绑定和调用方式以及调用的位置有关系；\n4.this是在运行时被绑定的\n\n在JavaScript中，this有四种绑定规则，分别是：\n1.默认绑定\n2.隐式绑定\n3.显式绑定\n4.new绑定\n\n下面我们分别对这四种绑定规则进行学习\n\n### 默认绑定\n\n默认绑定通常是在独立函数进行调用时进行绑定，独立函数调用我们可以理解成没有被绑定到某个对象进行调用,默认绑定在浏览器中指向的是window，当为[ 严格模式](https://www.runoob.com/js/js-strict.html)（use strict）的时候指向的是undefined\n\n```js\n// 案例一\nfunction foo() {\n  console.log(this)\n}\n\nfoo() // window对象\n\n// 案例二\nfunction foo(fn) {\n  fn()\n}\n\nconst obj = {\n  name: \"hhf\",\n  bar: function() {\n    console.log(this)\n  }\n}\n\n\nfoo(obj.bar) // window\n```\n\n### 显示绑定\n\n显示绑定通常是某个对象对它进行调用，通俗来讲：谁调用就指向谁\n\n```js\nfunction foo() {\n  console.log(this.name);\n}\n\nconst obj = {\n  name: \"hhf\",\n  bar: foo\n}\n\n\nobj.bar() // hhf\n```\n\n隐示绑定的另一种情况：\n\n当有多层对象嵌套调用某个函数的时候，如 `对象.对象.函数` ,this 指向的是最后一层对象。\n\n```js\nfunction foo() {\n  console.log(this.name);\n}\n\nconst person = {\n  name: \"person\"\n}\n\nperson.foo = foo\n\nconst obj = {\n  name: \"hhf\",\n  bar: foo,\n  person: person\n}\n\nobj.person.foo() // person\n```\n\n### 显式绑定\n\n在JavaScript中，所有的函数都可以使用call、apply、bind三个方法对函数的this进行绑定\n使用方式的不同：call、apply在函数调用时对它进行调用，bind会返回一个新的函数\n\n显示绑定的用途： 防抖、节流等\n\n#### call函数的使用\n\ncall() 方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数。\n它接收的参数为：第一个为绑定的this，后面接上的为所调用的函数的参数\n具体使用方法如下\n\n```js\n// 基本使用\nfunction foo() {\n  console.log(this.name);\n}\n\nconst obj = {\n  name: \"hhf\"\n}\n\n\nfoo.call(obj) // hhf\n\n// 传入参数\nfunction foo(n, m) {\n  console.log(this.name);\n  console.log(n, m)\n}\n\nconst obj = {\n  name: \"hhf\"\n}\n\n\nfoo.call(obj, \"n\", \"m\") // hhf n m\n```\n\n#### apply函数的使用\n\napply方法的语法和作用与 call() 方法类似，只有一个区别，就是 call() 方法接受的是一个参数列表，而 apply() 方法接受的是一个包含多个参数的数组。\n具体使用方法如下\n\n```js\nfunction foo(n, m) {\n  console.log(this.name);\n  console.log(n, m)\n}\n\nconst obj = {\n  name: \"hhf\"\n}\n\n\nfoo.call(obj, [\"n\", \"m\"]) // hhf, n m\n```\n\n#### bind函数的使用\n\nbind函数它所接收的参数和call函数一样，但是它会返回一个新的函数，新的函数的this会指向传入的对象\n\n```js\nfunction foo(n, m) {\n  console.log(this.name);\n  console.log(n, m)\n}\n\nconst obj = {\n  name: \"hhf\"\n}\n\n\nconst newFoo = foo.bind(obj, \"n\", \"m\")\n\nnewFoo() // hhf n m\n```\n\n### new 绑定\n\nnew是JavaScript中的一个关键字，当进行new操作调用函数时，会执行如下的操作\n1.函数内部会创建一个新的对象\n2.创建的对象的原型（__proto__）会指向函数的prototype\n3.所创建的对象会绑定到该函数的this上\n4.如果函数没有其他返回值，会默认返回该对象\n\n```js\nfunction Persion() {\n  console.log(this)\n}\n\nnew Persion(); // Persion {}\n```\n\n### 规则优先级\n\n上面我们学习了四种绑定规则，那么我们可能会思考，如果一个函数在调用的时候使用了多种绑定规则，谁的优先级最高呢？\n结果如下\n1.默认规则的优先级最低毫无疑问，默认规则的优先级是最低的，因为存在其他规则时，就会通过其他规则的方式来绑定this\n2.显示绑定优先级高于隐式绑定\n\n```js\nfunction foo() {\n  console.log(this.name)\n}\n\nconst obj1 = {\n  name: \'obj1\',\n  foo: foo\n}\n\nconst obj2 = {\n  name: \'obj2\',\n}\n\nobj1.foo.call(obj2) // obj2\n```\n\n3.new绑定优先级高于隐式绑定\n\n```js\nfunction foo() {\n  console.log(this)\n}\n\nconst obj1 = {\n  name: \'obj1\',\n  foo: foo\n}\n\nconst obj2 = {\n  name: \'obj2\',\n}\n\nnew obj1.foo() // foo {}\n```\n\n4.new绑定优先级高于bind\n new绑定和call、apply是不允许同时使用的，所以不存在谁的优先级更高\n new绑定可以和bind一起使用，new绑定优先级更高p代码测试\n\n```js\nfunction foo() {\n  console.log(this)\n}\n\nconst obj1 = {\n  name: \'obj1\',\n  foo: foo\n}\n\nconst newFoo = foo.bind(obj1)\nnew newFoo() // foo {}\n```\n\n### 箭头函数的this\n\n箭头函数是ES6中新增的一种函数的写法，但是箭头函数是不绑定this的，当在箭头函数中使用this时，它会随着它的作用域网上找，使用最近的作用域的this来使用\n\n```js\n// 使用普通函数\n\nconst obj1 = {\n  name: \'obj1\',\n  foo: function() {\n    console.log(this)\n  }\n}\n\nobj1.foo() // obj1\n\n// 使用箭头函数\nconst obj1 = {\n  name: \'obj1\',\n  foo: ()=> {\n    console.log(this)\n  }\n}\n\nobj1.foo() // window foo的上层作用域为window\n\n// setTimeout所传入的函数如果是普通函数，那么它绑定的是全局对象window，如果传入的\n//是一个箭头函数，那么它的this执行是它的上层作用域的this指向\nconst obj1 = {\n  name: \'obj1\',\n  bar: function() {\n    setTimeout(()=> {\n      console.log(this)\n    })\n  }\n}\n\nobj1.bar() // obj1\n```\n\n下面我们通过一道题，对刚刚所学的进行一个小练习\n\n```js\nvar name = \"window\"\n\nfunction Person(name) {\n  this.name = name\n  this.obj = {\n    name: \"obj\",\n    foo1: function() { \n      return function() {\n        console.log(this.name)\n      }\n    },\n    foo2: function() {\n      return ()=>{\n        console.log(this.name)\n      }\n    }\n  }\n}\n\nvar person1 = new Person(\"person1\")\nvar person2 = new Person(\"person2\")\n\nperson1.obj.foo1()()\nperson1.obj.foo1.call(person2)()\nperson1.obj.foo1().call(person2)\n\nperson1.obj.foo2()()\nperson1.obj.foo2.call(person2)()\nperson1.obj.foo2().call(person2)\n```\n\n输出结果为\n\n```js\n/*\nwindow\nwindow\nperson2\nobj\nperson2\nobj\n*/\n```', 'admin', '2022-08-25 15:43:43', '2022-08-25 15:43:43', null, '0');
 INSERT INTO `post` VALUES ('Pe733b68cbce0b3e5757998d8977a0228', 'e431cd38a0876f8e83fd3e4700adf0f5', 'postName', 'postTitle', 'content', 'admin', '2022-08-23 14:52:59', '2022-08-23 10:57:21', '1,2,3', '22');
 
 -- ----------------------------
@@ -249,14 +264,18 @@ CREATE TABLE `user` (
   `email` varchar(20) DEFAULT NULL,
   `concerns` int(11) DEFAULT '0',
   `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `status` enum('-1','0','1') DEFAULT '1' COMMENT '用户状态: 1:正常， 0：冻结, -1: 永封',
+  `type` enum('1','2','3') DEFAULT '1' COMMENT '用户状态: 1:普通用户， 2：管理人员, 3: 超管',
+  `nickname` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('512249510955f513041efa5680496722', 'hhf', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-19 09:55:41', null, null, null, '0', null);
-INSERT INTO `user` VALUES ('bd9a4c4ccbd7a9fc3524017c70e13567', 'admin1', '0985251f3d13076beec69aca778ea31f', null, null, null, '2022-08-23 09:27:35', null, null, '0', '2022-08-23 09:27:35');
-INSERT INTO `user` VALUES ('e431cd38a0876f8e83fd3e4700adf0f5', 'admin', '0985251f3d13076beec69aca778ea31f', 'http://localhost:3000/user/e431cd38a0876f8e83fd3e4700adf0f5/avatar', null, null, '2022-08-23 16:39:54', null, null, '0', '2022-08-23 16:39:54');
-INSERT INTO `user` VALUES ('e929e6d112134e1d15c1f641264693df', 'admin2', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-18 16:41:41', '2022-08-23 09:20:56', null, null, '0', '2022-08-23 09:20:56');
-INSERT INTO `user` VALUES ('e99da8b9c5bdd86d6a657e05d0f8516e', 'hhf1', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-19 09:56:39', null, null, null, '0', null);
+INSERT INTO `user` VALUES ('290bd15c4043cbc447737ba4b00205c4', 'superAdmin', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-25 10:43:29', '2022-08-25 10:43:54', null, null, '0', '2022-08-25 16:12:14', '1', '3', '1212');
+INSERT INTO `user` VALUES ('512249510955f513041efa5680496722', 'hhf', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-19 09:55:41', '2022-08-25 10:42:43', null, null, '0', '2022-08-25 16:12:17', '1', '1', '123132');
+INSERT INTO `user` VALUES ('bd9a4c4ccbd7a9fc3524017c70e13567', 'admin1', '0985251f3d13076beec69aca778ea31f', null, null, null, '2022-08-23 09:27:35', null, null, '0', '2022-08-25 16:12:18', '1', '1', '123123');
+INSERT INTO `user` VALUES ('e431cd38a0876f8e83fd3e4700adf0f5', 'admin', '0985251f3d13076beec69aca778ea31f', 'http://localhost:3000/user/e431cd38a0876f8e83fd3e4700adf0f5/avatar', null, null, '2022-08-25 11:24:42', null, null, '0', '2022-08-25 16:12:19', '1', '3', '123123');
+INSERT INTO `user` VALUES ('e929e6d112134e1d15c1f641264693df', 'admin2', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-18 16:41:41', '2022-08-23 09:20:56', null, null, '0', '2022-08-25 16:12:22', '0', '1', '123123');
+INSERT INTO `user` VALUES ('e99da8b9c5bdd86d6a657e05d0f8516e', 'hhf1', '0985251f3d13076beec69aca778ea31f', null, null, '2022-08-19 09:56:39', '2022-08-25 10:56:08', null, null, '0', '2022-08-25 16:12:20', '1', '1', '123123');

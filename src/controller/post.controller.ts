@@ -6,14 +6,14 @@ import commentService from '../service/comment.service'
 class PostController {
   async createPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { postName, postTitle, content } = ctx.request.body
+    const { postName, postIntro, content } = ctx.request.body
     const postId = generatePostId()
     const { userId, name } = ctx.user
     try {
       await postService.create(
         postId,
         postName,
-        postTitle,
+        postIntro,
         content,
         userId,
         name
@@ -24,6 +24,7 @@ class PostController {
         msg: '发布文章成功~'
       }
     } catch (error) {
+      console.log(error)
       ctx.body = {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
@@ -34,13 +35,13 @@ class PostController {
 
   async updatePost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { postId, postName, postTitle, content } = ctx.request.body
+    const { postId, postName, postIntro, content } = ctx.request.body
     const { userId, name } = ctx.user
 
     const result = await postService.update(
       postId,
       postName,
-      postTitle,
+      postIntro,
       content,
       userId,
       name

@@ -19,6 +19,7 @@ class UserController {
       data: {
         userId: userInfo.id,
         name: userInfo.name,
+        nickname: userInfo.nickname,
         avatar: userInfo.avatar,
         notes: userInfo.notes,
         phone: userInfo.phone,
