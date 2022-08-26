@@ -6,7 +6,7 @@ import commentService from '../service/comment.service'
 class PostController {
   async createPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { postName, postIntro, content } = ctx.request.body
+    const { postName, postIntro, content, categoryIds } = ctx.request.body
     const postId = generatePostId()
     const { userId, name } = ctx.user
     try {
@@ -16,7 +16,8 @@ class PostController {
         postIntro,
         content,
         userId,
-        name
+        name,
+        categoryIds
       )
       ctx.body = {
         code: httpStatusCode.SUCCESS,
@@ -90,6 +91,7 @@ class PostController {
     const { postId } = ctx.params
     try {
       const postInfo = await postService.getPostById(postId)
+      await postService.incrementPv(postId)
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: postInfo[0],

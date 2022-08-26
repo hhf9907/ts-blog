@@ -15,16 +15,18 @@ class PostService {
     postIntro: string,
     content: string,
     userId: string,
-    name: string
+    name: string,
+    categoryIds: string
   ) {
-    const statement = `INSERT INTO post (id, user_id, post_name, post_intro, content, creator) VALUES (?, ?, ?, ?, ?, ?)`
+    const statement = `INSERT INTO post (id, user_id, post_name, post_intro, content, creator, category_ids) VALUES (?, ?, ?, ?, ?, ?, ?)`
     const result = await connection.execute(statement, [
       postId,
       userId,
       postName,
       postIntro,
       content,
-      name
+      name,
+      categoryIds
     ])
 
     return result
@@ -58,16 +60,29 @@ class PostService {
     return result
   }
 
+  async incrementPv(postId: string) {
+    const statement = `UPDATE post SET pv = pv + 1 WHERE id = ?;`
+    const result = await connection.execute(statement, [postId])
+
+    return !!result[0].changedRows
+  }
+
   async getPostById(postId: string) {
     const statement = `SELECT 
-    id AS postId, 
-    user_id AS userId, 
-    post_name AS postName, 
-    post_intro AS postIntro, 
-    content, creator,
-    category_ids AS categoryIds, 
-    create_time AS createTime
-    FROM post WHERE id = ?;`
+    p.id AS postId, 
+    p.user_id AS userId, 
+    p.post_name AS postName, 
+    u.name AS username, 
+    u.nickname,
+    u.avatar,
+    p.post_intro AS postIntro, 
+    p.content,
+    p.pv,
+    p.category_ids AS categoryIds, 
+    p.create_time AS createTime
+    FROM post AS p
+    LEFT JOIN user AS u ON p.user_id = u.id 
+    WHERE p.id = ?;`
     const result = await connection.execute(statement, [postId])
 
     return result[0]
@@ -77,23 +92,27 @@ class PostService {
     const pageNum = Number(params.pageNum)
     const pageSize = Number(params.pageSize)
     const statement = `SELECT SQL_CALC_FOUND_ROWS
-    id AS postId, 
-    user_id AS userId, 
-    post_name AS postName, 
-    post_intro AS postIntro, 
-    content, creator, pv,
-    category_ids AS categoryIds, 
-    create_time AS createTime
-    FROM post 
+    p.id AS postId, 
+    u.name AS username, 
+    u.nickname,
+    u.avatar,
+    p.user_id AS userId, 
+    p.post_name AS postName, 
+    p.post_intro AS postIntro, 
+    creator, pv,
+    p.category_ids AS categoryIds, 
+    p.create_time AS createTime
+    FROM post AS p
+    LEFT JOIN user AS u ON p.user_id = u.id 
     ${params.keyword || params.categoryId ? 'WHERE ' : ''}
     ${
       // 关键字查询
       params.keyword
         ? `(
-          post_name LIKE '%${params.keyword}%' || 
-          post_intro LIKE '%${params.keyword}%' || 
-          content LIKE '%${params.keyword}%' || 
-          creator LIKE '%${params.keyword}%'
+          p.post_name LIKE '%${params.keyword}%' || 
+          p.post_intro LIKE '%${params.keyword}%' || 
+          p.content LIKE '%${params.keyword}%' || 
+          p.creator LIKE '%${params.keyword}%'
         )`
         : ``
     }
@@ -101,13 +120,13 @@ class PostService {
     ${
       // 查询分类
       params.categoryId
-        ? `(category_ids LIKE '%,${params.categoryId},%' || 
-          category_ids LIKE '%${params.categoryId},%' || 
-          category_ids LIKE '%,${params.categoryId}%'
+        ? `(p.category_ids LIKE '%,${params.categoryId},%' || 
+          p.category_ids LIKE '%${params.categoryId},%' || 
+          p.category_ids LIKE '%,${params.categoryId}%'
           )`
         : ``
     }
-    ORDER BY ${Number(params.queryType) === 1 ? 'create_time' : 'pv'} DESC
+    ORDER BY ${Number(params.queryType) === 1 ? 'p.create_time' : 'p.pv'} DESC
     LIMIT ${(pageNum - 1) * pageSize}, ${pageSize};
     `
 
