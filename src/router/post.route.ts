@@ -9,7 +9,7 @@ const postRouter = new Router({
 
 postRouter.post('/create', verifyAuth, postController.createPost)
 postRouter.put(
-  '/update',
+  '/update/:postId',
   verifyAuth,
   verifyPermission,
   postController.updatePost

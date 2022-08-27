@@ -6,7 +6,8 @@ import commentService from '../service/comment.service'
 class PostController {
   async createPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { postName, postIntro, content, categoryIds, editorType } = ctx.request.body
+    const { postName, postIntro, content, categoryIds, editorType } =
+      ctx.request.body
     const postId = generatePostId()
     const { userId, name } = ctx.user
     try {
@@ -37,16 +38,18 @@ class PostController {
 
   async updatePost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
-    const { postId, postName, postIntro, content } = ctx.request.body
+    const { postId, postName, postIntro, content, categoryIds, editorType } =
+      ctx.request.body
     const { userId, name } = ctx.user
-
     const result = await postService.update(
       postId,
       postName,
       postIntro,
       content,
       userId,
-      name
+      name,
+      categoryIds,
+      editorType
     )
     if (result) {
       ctx.body = {
@@ -113,7 +116,7 @@ class PostController {
     const {
       pageNum,
       pageSize,
-      keyword='',
+      keyword = '',
       queryType = 1,
       categoryId
     } = ctx.request.query
