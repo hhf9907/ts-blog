@@ -46,16 +46,26 @@ class FileController {
     const fileNames = []
     const { userId } = ctx.user
     // 2.将所有的文件信息保存到数据库中
-    for (let file of files) {
-      const { filename, mimetype, size } = file
-      await fileService.createFile(filename, mimetype, size, userId)
-      fileNames.push( `${appConfig.HOST}:${appConfig.PORT}/file/files/${filename}`)
-    }
+    try {
+      for (let file of files) {
+        const { filename, mimetype, size } = file
+        await fileService.createFile(filename, mimetype, size, userId)
+        fileNames.push(
+          `${appConfig.HOST}:${appConfig.PORT}/file/files/${filename}`
+        )
+      }
 
-    ctx.body = {
-      code: httpStatusCode.SUCCESS,
-      data: fileNames,
-      msg: '图片上传成功~'
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: fileNames,
+        msg: '图片上传成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '图片上传失败~'
+      }
     }
   }
 

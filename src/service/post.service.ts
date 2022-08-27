@@ -16,9 +16,10 @@ class PostService {
     content: string,
     userId: string,
     name: string,
-    categoryIds: string
+    categoryIds: string,
+    editorType=1
   ) {
-    const statement = `INSERT INTO post (id, user_id, post_name, post_intro, content, creator, category_ids) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    const statement = `INSERT INTO post (id, user_id, post_name, post_intro, content, creator, category_ids, edit_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     const result = await connection.execute(statement, [
       postId,
       userId,
@@ -26,7 +27,8 @@ class PostService {
       postIntro,
       content,
       name,
-      categoryIds
+      categoryIds,
+      editorType
     ])
 
     return result
@@ -78,6 +80,7 @@ class PostService {
     p.post_intro AS postIntro, 
     p.content,
     p.pv,
+    edit_type AS editorType,
     p.category_ids AS categoryIds, 
     p.create_time AS createTime
     FROM post AS p
