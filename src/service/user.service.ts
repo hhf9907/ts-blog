@@ -14,8 +14,8 @@ class UserService {
    */
   async create(user: IUser) {
     const { userId, name, password } = user
-    const statement = `INSERT INTO user (id, name, nickname, password, update_time, create_time) VALUES (?, ?, ?, ?, NOW(),NOW());`
-    const result = await connection.execute(statement, [userId, name,name, password])
+    const statement = `INSERT INTO user (id, name, nickname, password) VALUES (?, ?, ?, ?);`
+    const result = await connection.execute(statement, [userId, name, name, password])
 
     return result[0]
   }
@@ -59,6 +59,27 @@ class UserService {
     const statement = `UPDATE user SET avatar = ? WHERE id = ?;`
     const [result] = await connection.execute(statement, [avatarUrl, userId])
     return result
+  }
+
+  // 关注用户 A -> B
+
+  async concernUser(toUserId: string, fromUserId: string) {
+    const statement = `INSERT INTO relation (to_user_id, from_user_id) VALUES (?, ?);`
+    const result = await connection.execute(statement, [toUserId, fromUserId])
+
+    return !!result[0].affectedRows
+  }
+
+  async queryConcernAndFans(userId: string) {
+    const concernSql = `SELECT COUNT(id) AS concerns FROM relation WHERE to_user_id = '${userId}'`
+    const fansSql = `SELECT COUNT(id) AS fans FROM relation WHERE from_user_id = '${userId}'`
+    const concerns = await connection.execute(concernSql)
+    const fans = await connection.execute(fansSql)
+
+    return {
+      concerns: concerns[0][0].concerns,
+      fans: fans[0][0].fans
+    }
   }
 }
 

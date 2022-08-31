@@ -22,4 +22,8 @@ postRouter.delete(
   verifyPermission,
   postController.deletePost
 )
+postRouter.get(
+  '/getPostPvTotal',
+  postController.getPostPvTotal
+)
 module.exports = postRouter

@@ -144,6 +144,29 @@ class PostController {
       }
     }
   }
+
+  // 统计浏览数
+  async getPostPvTotal(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // queryType 1 最新， 2 最热
+    const {
+      userId
+    } = ctx.request.query
+
+    try {
+      const pvTotal = await postService.userPostPvTotal(userId)
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: pvTotal,
+        msg: '获取文章总浏览数成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取文章总浏览数,请检查参数是否有误~'
+      }
+    }
+  }
 }
 
 export default new PostController()

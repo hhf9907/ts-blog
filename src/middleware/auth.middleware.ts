@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { PUBLIC_KEY } = require('../app/config')
 import authService from '../service/auth.service'
 import userService from '../service/user.service'
-import { md5password, generateUserId } from '../utils/password-handle'
+import { md5password, generateUserId, decrypt } from '../utils/password-handle'
 import errorTypes from '../constants/error-types'
 import userStatus from '../constants/user.status'
 import userTypes from '../constants/user.type'
@@ -17,7 +17,8 @@ const verifyLogin = async (
   console.log('验证登录的middleware~')
 
   // 1.获取用户名和密码
-  const { name, password } = ctx.request.body
+  const { name, passWord } = ctx.request.body
+  const password = decrypt(passWord) // 解密
   // 2.判断用户名和密码是否为空
   if (!name || !password) {
     const error = new Error(errorTypes.NAME_OR_PASSWORD_IS_REQUIRED)
@@ -97,7 +98,7 @@ const verifyAuth = async (
   console.log('验证授权的middleware~')
   // 1.获取token
   const authorization = ctx.headers.authorization
-  
+
   if (!authorization) {
     const error = new Error(errorTypes.UNAUTHORIZATION)
     return ctx.app.emit('error', error, ctx)
@@ -131,7 +132,7 @@ const verifyPermission = async (
   // 1.获取参数 { commentId: '1' }
   const [resourceKey] = Object.keys(ctx.params)
   const tableName = resourceKey.replace('Id', '')
-  
+
   const resourceId = ctx.params[resourceKey]
   const { userId, type } = ctx.user
 
@@ -150,10 +151,10 @@ const verifyPermission = async (
       const error = new Error(errorTypes.UNPERMISSION)
       return ctx.app.emit('error', error, ctx)
     }
-  }else { // 管理员可直接操作
+  } else { // 管理员可直接操作
     await next()
   }
-    
+
 }
 
 // const verifyPermission = (tableName) => {

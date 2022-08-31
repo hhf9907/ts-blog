@@ -12,4 +12,8 @@ userRouter.get('/:userId/avatar', userController.avatarInfo)
 
 userRouter.get('/info', verifyAuth, userController.getUserInfo)
 
+userRouter.post('/concern/:fromUserId', verifyAuth, userController.concernUser)
+
+userRouter.get('/queryConcernAndFans', verifyAuth, userController.queryConcernAndFans)
+
 module.exports = userRouter

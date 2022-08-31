@@ -170,6 +170,12 @@ class PostService {
       pages: Math.ceil(count / 10) // 向上取整
     }
   }
+
+  async userPostPvTotal(userId: string) {
+    const statement = `SELECT SUM(pv) AS pvTotal FROM post WHERE user_id = ?`
+    const result = await connection.execute(statement, [userId])
+    return result[0][0]
+  }
 }
 
 export default new PostService()
