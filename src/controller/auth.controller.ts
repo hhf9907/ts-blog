@@ -8,7 +8,7 @@ class AuthController {
   async login(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { id: userId, name, nickname, avatar, notes, status, type } = ctx.user
     const token = jwt.sign({ userId, name, type }, PRIVATE_KEY, {
-      expiresIn: 60 * 60 * 24,
+      expiresIn: 60 * 60 * 24 * 10,
       algorithm: 'RS256'
     })
 

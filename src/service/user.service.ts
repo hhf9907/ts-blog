@@ -15,7 +15,12 @@ class UserService {
   async create(user: IUser) {
     const { userId, name, password } = user
     const statement = `INSERT INTO user (id, name, nickname, password) VALUES (?, ?, ?, ?);`
-    const result = await connection.execute(statement, [userId, name, name, password])
+    const result = await connection.execute(statement, [
+      userId,
+      name,
+      name,
+      password
+    ])
 
     return result[0]
   }
@@ -38,10 +43,36 @@ class UserService {
    * @returns
    */
   async getUserById(userId: string) {
-    const statement = `SELECT * FROM user WHERE id = ?;`
+    const statement = `SELECT
+    id AS userId, name, nickname, avatar, notes, phone, email,
+    (
+      SELECT
+      COUNT(r.id) 
+      FROM relation AS r 
+      WHERE r.to_user_id = '${userId}'
+    ) AS concerns,
+    (
+      SELECT
+      COUNT(r.id) 
+      FROM relation AS r 
+      WHERE r.from_user_id = '${userId}'
+    ) AS fans,
+    (
+      SELECT
+      SUM(p.pv) 
+      FROM post AS p 
+      WHERE p.user_id = '${userId}'
+    ) AS pvTotal ,
+    (
+      SELECT
+      COUNT(c.id) 
+      FROM collect AS c 
+      WHERE c.user_id = '${userId}'
+    ) AS collectTotal 
+    FROM user WHERE id = ?;`
     const result = await connection.execute(statement, [userId])
 
-    return result[0]
+    return result[0][0]
   }
 
   /**
@@ -64,21 +95,38 @@ class UserService {
   // 关注用户 A -> B
 
   async concernUser(toUserId: string, fromUserId: string) {
+    const query = `SELECT id FROM relation WHERE to_user_id='${toUserId}' AND from_user_id='${fromUserId}'`
+    const queryRes = await connection.execute(query)
+
+    if (queryRes[0].length) {
+      // 关注过返回false
+      return Promise.reject(false)
+    }
+
     const statement = `INSERT INTO relation (to_user_id, from_user_id) VALUES (?, ?);`
     const result = await connection.execute(statement, [toUserId, fromUserId])
 
     return !!result[0].affectedRows
   }
 
-  async queryConcernAndFans(userId: string) {
-    const concernSql = `SELECT COUNT(id) AS concerns FROM relation WHERE to_user_id = '${userId}'`
-    const fansSql = `SELECT COUNT(id) AS fans FROM relation WHERE from_user_id = '${userId}'`
-    const concerns = await connection.execute(concernSql)
-    const fans = await connection.execute(fansSql)
+  async deleteConcernUser(toUserId: string, fromUserId: string) {
+    const statement = `DELETE FROM relation WHERE to_user_id='${toUserId}' AND  from_user_id='${fromUserId}'`
+    const result = await connection.execute(statement, [toUserId, fromUserId])
+    console.log(result)
+    return result
+  }
 
+  async queryConcernAndFans(userId: string) {
+    const statement = `
+    SELECT 
+    COUNT(if(from_user_id='${userId}',true,null)) AS fans,
+    COUNT(if(to_user_id='${userId}',true,null)) AS concerns
+    FROM relation
+    `
+    const result = await connection.execute(statement)
     return {
-      concerns: concerns[0][0].concerns,
-      fans: fans[0][0].fans
+      concerns: result[0][0].concerns,
+      fans: result[0][0].fans
     }
   }
 }

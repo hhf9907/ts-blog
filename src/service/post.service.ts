@@ -95,7 +95,7 @@ class PostService {
     return result[0]
   }
 
-  async queryPostList(params: queryCategoryParams) {
+  async queryPostList(params: queryCategoryParams, userId='') {
     const pageNum = Number(params.pageNum)
     const pageSize = Number(params.pageSize)
     const statement = `SELECT SQL_CALC_FOUND_ROWS
@@ -105,11 +105,13 @@ class PostService {
     u.avatar,
     p.user_id AS userId, 
     p.post_name AS postName, 
-    p.post_intro AS postIntro, 
+    p.post_intro AS postIntro,
+    if((c.user_id='${userId}' && c.post_id=p.id) ,1,0) AS isCollect, 
     creator, pv,
     p.category_ids AS categoryIds, 
     p.create_time AS createTime
     FROM post AS p
+    LEFT JOIN collect AS c  ON c.post_id = p.id
     LEFT JOIN user AS u ON p.user_id = u.id 
     ${params.keyword || params.categoryId ? 'WHERE ' : ''}
     ${
@@ -175,6 +177,35 @@ class PostService {
     const statement = `SELECT SUM(pv) AS pvTotal FROM post WHERE user_id = ?`
     const result = await connection.execute(statement, [userId])
     return result[0][0]
+  }
+
+  async collectPost(userId: string, postId: string) {
+    const query = `SELECT id FROM collect WHERE user_id='${userId}' AND post_id='${postId}'`
+    const queryRes = await connection.execute(query)
+
+    if (queryRes[0].length) {
+      // 关注过返回false
+      return Promise.reject(false)
+    }
+
+    const statement = `INSERT INTO collect (user_id, post_id) VALUES (?, ?);`
+    const result = await connection.execute(statement, [userId, postId])
+
+    return !!result[0].affectedRows
+  }
+
+  /**
+   * 取消收藏
+   * @param userId 
+   * @param postId 
+   * @returns 
+   */
+  async cancelCollectPost(userId: string, postId: string) {
+
+    const statement = `DELETE FROM collect WHERE user_id='${userId}' AND post_id='${postId}'`
+    const result = await connection.execute(statement, [userId, postId])
+
+    return result
   }
 }
 

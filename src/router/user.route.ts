@@ -14,6 +14,9 @@ userRouter.get('/info', verifyAuth, userController.getUserInfo)
 
 userRouter.post('/concern/:fromUserId', verifyAuth, userController.concernUser)
 
+userRouter.post('/cancelConcern/:fromUserId', verifyAuth, userController.cancelConcernUser)
+
+
 userRouter.get('/queryConcernAndFans', verifyAuth, userController.queryConcernAndFans)
 
 module.exports = userRouter

@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 
 import postController from '../controller/post.controller'
-import { verifyPermission, verifyAuth } from '../middleware/auth.middleware'
+import { verifyPermission, verifyAuth, getTokenUserInfo } from '../middleware/auth.middleware'
 
 const postRouter = new Router({
   prefix: '/post'
@@ -15,7 +15,7 @@ postRouter.put(
   postController.updatePost
 )
 postRouter.get('/getPostById/:postId', postController.getPost)
-postRouter.get('/list', postController.getPostList)
+postRouter.get('/list', getTokenUserInfo, postController.getPostList)
 postRouter.delete(
   '/:postId',
   verifyAuth,
@@ -25,5 +25,15 @@ postRouter.delete(
 postRouter.get(
   '/getPostPvTotal',
   postController.getPostPvTotal
+)
+postRouter.post(
+  '/collect/:postId',
+  verifyAuth,
+  postController.collectPost
+)
+postRouter.post(
+  '/cancelCollect/:postId',
+  verifyAuth,
+  postController.cancelCollectPost
 )
 module.exports = postRouter

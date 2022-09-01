@@ -16,16 +16,7 @@ class UserController {
     // 返回结果
     ctx.body = {
       code: httpStatusCode.SUCCESS,
-      data: {
-        userId: userInfo.id,
-        name: userInfo.name,
-        nickname: userInfo.nickname,
-        avatar: userInfo.avatar,
-        notes: userInfo.notes,
-        phone: userInfo.phone,
-        email: userInfo.email,
-        concerns: userInfo.concerns
-      },
+      data: result,
       msg: '获取用户信息成功~'
     }
   }
@@ -43,7 +34,7 @@ class UserController {
     )
   }
 
-  // 获取头像信息
+  // 关注用户
   async concernUser(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { fromUserId } = ctx.params
     const { userId } = ctx.user
@@ -55,8 +46,9 @@ class UserController {
       }
     }
     try {
-      const avatarInfo = await userService.concernUser(userId, fromUserId)
-      if (avatarInfo) {
+      const data = await userService.concernUser(userId, fromUserId)
+
+      if (data) {
         ctx.body = {
           code: httpStatusCode.SUCCESS,
           data: null,
@@ -64,10 +56,42 @@ class UserController {
         }
       }
     } catch (error) {
+      if (error === false) {
+        ctx.body = {
+          code: httpStatusCode.PARAMETER_ERROR,
+          data: null,
+          msg: '您已经关注该用户~'
+        }
+      } else {
+        ctx.body = {
+          code: httpStatusCode.PARAMETER_ERROR,
+          data: null,
+          msg: '关注失败~'
+        }
+      }
+    }
+  }
+
+  // 取消用户
+  async cancelConcernUser(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    const { fromUserId } = ctx.params
+    const { userId } = ctx.user
+
+    try {
+      const data = await userService.deleteConcernUser(userId, fromUserId)
+
+      if (data) {
+        ctx.body = {
+          code: httpStatusCode.SUCCESS,
+          data: null,
+          msg: '取消关注成功~'
+        }
+      }
+    } catch (error) {
       ctx.body = {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
-        msg: '关注失败,请检查参数是否有误~'
+        msg: '取消关注失败~'
       }
     }
   }

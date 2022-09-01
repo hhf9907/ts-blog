@@ -119,6 +119,36 @@ const verifyAuth = async (
 }
 
 /**
+ * 只是为了拿到token中的信息,不做其他鉴权
+ * @param ctx 
+ * @param next 
+ * @returns 
+ */
+const getTokenUserInfo = async (
+  ctx: Koa.DefaultContext,
+  next: () => Promise<any>
+) => {
+  console.log('验证授权的middleware~')
+  // 1.获取token
+  const authorization = ctx.headers.authorization
+
+  if (!authorization) {
+    return await next()
+  }
+  const token = authorization
+  // 2.验证token(id/name/iat/exp)
+  try {
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ['RS256']
+    })
+    ctx.user = result
+    await next()
+  } catch (err) {
+    await next()
+  }
+}
+
+/**
  * 1.很多的内容都需要验证权限: 修改/删除动态, 修改/删除评论
  * 2.接口: 业务接口系统/后端管理系统
  *  一对一: user -> role
@@ -181,5 +211,6 @@ export {
   verifyLogin,
   verifyRegister,
   verifyAuth,
-  verifyPermission
+  verifyPermission,
+  getTokenUserInfo
 }
