@@ -21,6 +21,18 @@ class UserController {
     }
   }
 
+  // 获取用户信息
+  async getUserInfoById(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    const { userId } = ctx.params
+    const result = await userService.getUserById(userId)
+    // 返回结果
+    ctx.body = {
+      code: httpStatusCode.SUCCESS,
+      data: result,
+      msg: '获取用户信息成功~'
+    }
+  }
+
   // 获取头像信息
   async avatarInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { userId } = ctx.params

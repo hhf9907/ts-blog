@@ -12,6 +12,8 @@ userRouter.get('/:userId/avatar', userController.avatarInfo)
 
 userRouter.get('/info', verifyAuth, userController.getUserInfo)
 
+userRouter.get('/getUserInfo/:userId', userController.getUserInfoById)
+
 userRouter.post('/concern/:fromUserId', verifyAuth, userController.concernUser)
 
 userRouter.post('/cancelConcern/:fromUserId', verifyAuth, userController.cancelConcernUser)
