@@ -107,6 +107,7 @@ class PostService {
     p.post_name AS postName, 
     p.post_intro AS postIntro,
     if((c.user_id='${userId}' && c.post_id=p.id) ,1,0) AS isCollect, 
+    ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum,
     creator, pv,
     p.category_ids AS categoryIds, 
     p.create_time AS createTime

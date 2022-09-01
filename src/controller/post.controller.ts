@@ -173,6 +173,7 @@ class PostController {
     const { postId } = ctx.params
     const { userId } = ctx.user
 
+    
     try {
       const result = await postService.collectPost(userId, postId)
       if (result) {
