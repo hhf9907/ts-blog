@@ -42,6 +42,18 @@ class UserService {
    * @param name
    * @returns
    */
+  async getUserByEmail(email: string) {
+    const statement = `SELECT * FROM user WHERE email = ?;`
+    const result = await connection.execute(statement, [email])
+
+    return result[0]
+  }
+
+  /**
+   * 查询用户
+   * @param name
+   * @returns
+   */
   async getUserById(userId: string) {
     const statement = `SELECT
     id AS userId, name, nickname, avatar, notes, phone, email,

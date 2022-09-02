@@ -64,7 +64,8 @@ const verifyRegister = async (
   console.log('验证注册的middleware~')
 
   // 1.获取用户名和密码
-  const { name, password } = ctx.request.body
+  const { name, passWord } = ctx.request.body
+  const password = decrypt(passWord) // 解密
   console.log(name, password)
   // 2.判断用户名和密码是否为空
   if (!name || !password) {
