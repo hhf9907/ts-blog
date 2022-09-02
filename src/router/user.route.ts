@@ -18,6 +18,9 @@ userRouter.post('/concern/:fromUserId', verifyAuth, userController.concernUser)
 
 userRouter.post('/cancelConcern/:fromUserId', verifyAuth, userController.cancelConcernUser)
 
+userRouter.put('/updateBaseInfo', verifyAuth, userController.updateBaseInfo)
+
+userRouter.put('/updateAccountInfo', verifyAuth, userController.updateAccountInfo)
 
 userRouter.get('/queryConcernAndFans', verifyAuth, userController.queryConcernAndFans)
 

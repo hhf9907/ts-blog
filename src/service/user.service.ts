@@ -45,6 +45,7 @@ class UserService {
   async getUserById(userId: string) {
     const statement = `SELECT
     id AS userId, name, nickname, avatar, notes, phone, email,
+    home_page AS homePage,
     (
       SELECT
       COUNT(r.id) 
@@ -73,6 +74,18 @@ class UserService {
     const result = await connection.execute(statement, [userId])
 
     return result[0][0]
+  }
+
+  async updateBaseInfo(userId: string, nickname: string, homePage: string, notes: string) {
+    const statement = `UPDATE user SET nickname=?, home_page=?, notes=? WHERE id = ?;`
+    const result = await connection.execute(statement, [nickname, homePage, notes, userId])
+    return result
+  }
+
+  async updateAccountInfo(userId: string, phone: string, email: string) {
+    const statement = `UPDATE user SET phone=?, email=? WHERE id = ?;`
+    const result = await connection.execute(statement, [phone, email, userId])
+    return result
   }
 
   /**

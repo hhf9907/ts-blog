@@ -33,6 +33,71 @@ class UserController {
     }
   }
 
+  // 修改用户信息
+  async updateBaseInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    const { userId } = ctx.user
+    const { nickname, homePage, notes } = ctx.request.body
+
+    if(!nickname.trim() || !nickname ) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '昵称不能为空~'
+      }
+      return 
+    }
+
+    try {
+      // 返回结果
+      const result = await userService.updateBaseInfo(
+        userId,
+        nickname,
+        homePage,
+        notes
+      )
+      if (result) {
+        ctx.body = {
+          code: httpStatusCode.SUCCESS,
+          data: null,
+          msg: '修改用户信息成功~'
+        }
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '修改用户信息失败~'
+      }
+    }
+  }
+
+  // 修改用户信息
+  async updateAccountInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    const { userId } = ctx.user
+    const { phone, email } = ctx.request.body
+
+    try {
+      // 返回结果
+      const result = await userService.updateAccountInfo(
+        userId,
+        phone, email
+      )
+      if (result) {
+        ctx.body = {
+          code: httpStatusCode.SUCCESS,
+          data: null,
+          msg: '修改用户信息成功~'
+        }
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '修改用户信息失败~'
+      }
+    }
+  }
+
   // 获取头像信息
   async avatarInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { userId } = ctx.params
