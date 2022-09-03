@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # 将本地代码复制到工作目录内
 COPY ./ ./
 
-RUN npm install -g yarn
+RUN npm install yarn -g
 
 RUN yarn install
 
