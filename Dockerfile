@@ -8,9 +8,7 @@ WORKDIR /usr/src/app
 # 将本地代码复制到工作目录内
 COPY ./ ./
 
-RUN npm install yarn -g
-
-RUN yarn install
+RUN npm install
 
 # 安装 pm2
 RUN npm install pm2 -g
