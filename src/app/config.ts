@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const dotenv = require('dotenv')
+import { getIpAddress } from '../utils/util'
 
 dotenv.config()
 
@@ -13,9 +14,14 @@ const PRIVATE_KEY = fs.readFileSync(
 const PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, './keys/public.key'))
 
 // const HOST = process.env.NODE_ENV === 'production' ? 'coderhhf' : 'http://localhost',
-enum appConfig {
-  HOST = 'http://localhost',
-  PORT = 3000
+const IPv4 = getIpAddress()
+
+console.log('ip地址：', IPv4)
+// 43.139.46.91  1.12.251.216
+const appConfig = {
+  // HOST: 'http://' + IPv4,
+  HOST: 'http://1.12.251.216',
+  PORT: 3000
 }
 
 enum mysqlConfig {
