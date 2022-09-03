@@ -38,6 +38,58 @@ async function sendMail(email: string, code: string) {
 
 }
 
+async function sendResetPwdMail(email: string, code: string) {
+  // 发送的配置项
+  let mailOptions = {
+    from: `"coderhhf登录"<1399859803@qq.com>`,// 发件人
+    subject: '验证码',//邮箱主题
+    to: email,//收件人，这里由post请求传递过来
+    // 邮件内容，用html格式编写
+    html: `
+          <p>您好！</p>
+          <p>您正在发送找回验证码邮箱，您的验证码是：<strong style="color:orangered;">${code}</strong></p>
+          <p>如果不是您本人操作，请无视此邮件</p>
+         `
+  };
+
+  //发送函数
+  transporter.sendMail(mailOptions, (error: any, info: any) => {
+    if (error) {
+      return Promise.reject(false);
+    } else {
+      return Promise.resolve(info); //因为是异步 所有需要回调函数通知成功结果
+    }
+  });
+
+}
+
+async function sendRegisterMail(email: string, code: string) {
+  // 发送的配置项
+  let mailOptions = {
+    from: `"coderhhf登录"<1399859803@qq.com>`,// 发件人
+    subject: '验证码',//邮箱主题
+    to: email,//收件人，这里由post请求传递过来
+    // 邮件内容，用html格式编写
+    html: `
+          <p>您好！</p>
+          <p>您正在注册coderhhf账号，您的验证码是：<strong style="color:orangered;">${code}</strong></p>
+          <p>如果不是您本人操作，请无视此邮件</p>
+         `
+  };
+
+  //发送函数
+  transporter.sendMail(mailOptions, (error: any, info: any) => {
+    if (error) {
+      return Promise.reject(false);
+    } else {
+      return Promise.resolve(info); //因为是异步 所有需要回调函数通知成功结果
+    }
+  });
+
+}
+
 export {
-  sendMail
+  sendMail,
+  sendResetPwdMail,
+  sendRegisterMail
 }

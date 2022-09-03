@@ -9,6 +9,7 @@ import { md5password, generateUserId, decrypt } from '../utils/password-handle'
 import errorTypes from '../constants/error-types'
 import userStatus from '../constants/user.status'
 import userTypes from '../constants/user.type'
+import codeManager from '../sms/codeManage'
 
 const verifyLogin = async (
   ctx: Koa.DefaultContext,
@@ -26,7 +27,7 @@ const verifyLogin = async (
   }
 
   // 3.判断用户是否存在的
-  const result = await userService.getUserByName(name)
+  const result = await userService.getUserByNameOrEmailOrPhone(name)
   const user = result[0]
   if (!user) {
     const error = new Error(errorTypes.USER_DOES_NOT_EXISTS)
@@ -188,30 +189,85 @@ const verifyPermission = async (
 
 }
 
-// const verifyPermission = (tableName) => {
-//   return async (ctx, next) => {
-//     console.log("验证权限的middleware~");
+const verifyMailCode = async (
+  ctx: Koa.DefaultContext,
+  next: () => Promise<any>
+) => {
+  console.log('验证邮箱登录的middleware')
 
-//     // 1.获取参数
-//     const { momentId } = ctx.params;
-//     const { id } = ctx.user;
+  // 1.获取所有信息
+  const { email, code, token } = ctx.request.body
 
-//     // 2.查询是否具备权限
-//     try {
-//       const isPermission = await authService.checkResource(tableName, momentId, id);
-//       if (!isPermission) throw new Error();
-//       await next();
-//     } catch (err) {
-//       const error = new Error(errorTypes.UNPERMISSION);
-//       return ctx.app.emit('error', error, ctx);
-//     }
-//   }
-// }
+  // 2.判断用户是否存在的
+  const result = await userService.getUserByEmail(email)
+  const user = result[0]
+  if (!user) {
+    const error = new Error(errorTypes.USER_DOES_NOT_EXISTS)
+    return ctx.app.emit('error', error, ctx)
+  }
+
+  // 3.验证 验证码
+  const bool = codeManager.verify(email, code, token)
+
+  if (bool) {
+    // 4.判断用户状态是否正常
+    if (user.status !== userStatus.NORMAL) {
+      const error = new Error(errorTypes.USER_ERROR)
+      const msg =
+        user.status === userStatus.FREEZE
+          ? '当前用户已被冻结,请联系管理人员解封~'
+          : '当前用户已被永久封号~'
+      return ctx.app.emit('error', error, ctx, msg)
+    }
+
+    // 5. 登录成功修改登录时间
+    await userService.updateLoginTime(user.id)
+
+    ctx.user = user
+
+    await next()
+  } else {
+    const error = new Error(errorTypes.PARAMS_IS_REQUIRED)
+    ctx.app.emit('error', error, ctx, '验证码错误')
+  }
+}
+
+const verifyResetMailCode = async (
+  ctx: Koa.DefaultContext,
+  next: () => Promise<any>
+) => {
+  console.log('验证邮箱找回密码的middleware')
+
+  // 1.获取所有信息
+  const { email, code, token, passWord } = ctx.request.body
+  const password = decrypt(passWord)
+
+  // 2.判断用户是否存在的
+  const result = await userService.getUserByEmail(email)
+  const user = result[0]
+  if (!user) {
+    const error = new Error(errorTypes.USER_DOES_NOT_EXISTS)
+    return ctx.app.emit('error', error, ctx)
+  }
+
+  // 3.验证 验证码
+  const bool = codeManager.verify(email, code, token)
+
+  if (bool) {
+    await userService.resetPassword(email, md5password(password)) // 重置密码
+    await next()
+  } else {
+    const error = new Error(errorTypes.PARAMS_IS_REQUIRED)
+    ctx.app.emit('error', error, ctx, '验证码错误')
+  }
+}
 
 export {
   verifyLogin,
   verifyRegister,
   verifyAuth,
   verifyPermission,
-  getTokenUserInfo
+  getTokenUserInfo,
+  verifyMailCode,
+  verifyResetMailCode
 }

@@ -42,11 +42,30 @@ class UserService {
    * @param name
    * @returns
    */
+  async getUserByNameOrEmailOrPhone(name: string) {
+    const statement = `SELECT * FROM user WHERE name = ? || phone = ? || email = ?;`
+    const result = await connection.execute(statement, [name, name, name])
+
+    return result[0]
+  }
+
+  /**
+   * 查询用户
+   * @param name
+   * @returns
+   */
   async getUserByEmail(email: string) {
     const statement = `SELECT * FROM user WHERE email = ?;`
     const result = await connection.execute(statement, [email])
 
     return result[0]
+  }
+
+  // 重置密码
+  async resetPassword(email: string, password: string) {
+    const statement = `UPDATE user SET password=? WHERE email = ?;`
+    const result = await connection.execute(statement, [password, email])
+    return result
   }
 
   /**
