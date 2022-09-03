@@ -14,4 +14,4 @@ RUN npm install
 RUN npm install pm2 -g
 
 # 启动服务
-CMD pm2-runtime 'yarn start'
+CMD pm2-runtime 'npm start'
