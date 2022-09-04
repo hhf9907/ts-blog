@@ -20,7 +20,7 @@ console.log('ip地址：', IPv4)
 // 43.139.46.91  1.12.251.216
 const appConfig = {
   // HOST: 'http://' + IPv4,
-  HOST: 'https://blog-api.coderhhf.cn',
+  HOST: process.env.NODE_ENV === 'production' ? 'https://blog-api.coderhhf.cn' : 'http://127.0.0.1:3000',
   PORT: 3000
 }
 
