@@ -14,6 +14,9 @@ RUN npm install
 RUN npm install pm2 -g
 
 EXPOSE 3000
+EXPOSE 465
+EXPOSE 587
+EXPOSE 995
 
 # 启动服务
 CMD pm2-runtime 'npm start'
