@@ -5,7 +5,6 @@ const transporter = nodemailer.createTransport({
   service: 'qq', //类型qq邮箱
   port: 465,
   secure: true, // true for 465, false for other ports
-  secureConnection: process.env.NODE_ENV === 'production' ? true : false, // 使用 SSL
   auth: {
     user: '1399859803@qq.com', // 发送方的邮箱
     pass: 'eicnnxqnywxkjebc' // smtp 的授权码
