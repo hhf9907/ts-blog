@@ -17,7 +17,7 @@ class FileController {
     await fileService.createAvatar(filename, mimetype, size, userId)
 
     // 3.将图片地址保存到user表中
-    const avatarUrl = `${appConfig.HOST}:${appConfig.PORT}/user/${userId}/avatar`
+    const avatarUrl = `${appConfig.HOST}/user/${userId}/avatar`
     await userService.updateAvatarUrlById(avatarUrl, userId)
 
     // 4.返回结果
@@ -52,7 +52,7 @@ class FileController {
         const { filename, mimetype, size } = file
         await fileService.createFile(filename, mimetype, size, userId)
         fileNames.push(
-          `${appConfig.HOST}:${appConfig.PORT}/file/files/${filename}`
+          `${appConfig.HOST}/file/files/${filename}`
         )
       }
 

@@ -24,6 +24,12 @@ const appConfig = {
   PORT: 3000
 }
 
+const fileConfig = {
+  // HOST: 'http://' + IPv4,
+  HOST: 'https://blog-api.coderhhf.cn'
+}
+
+
 enum mysqlConfig {
   HOST = '1.12.251.216',
   DATABASE = 'ts_blog',
@@ -31,4 +37,4 @@ enum mysqlConfig {
   PASSWORD = 'root'
 }
 
-export { PRIVATE_KEY, PUBLIC_KEY, mysqlConfig, appConfig }
+export { PRIVATE_KEY, PUBLIC_KEY, mysqlConfig, appConfig, fileConfig }
