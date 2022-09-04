@@ -10,7 +10,7 @@ class FileController {
   async saveAvatarInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.获取图像相关的信息
     const { filename, mimetype, size } = ctx.req.file
-    
+
     const { userId } = ctx.user
 
     // 2.将图像信息数据保存到数据库中

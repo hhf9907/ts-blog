@@ -1,11 +1,6 @@
 # FROM 表示设置要制作的镜像基于哪个镜像，FROM指令必须是整个Dockerfile的第一个指令，如果指定的镜像不存在默认会自动从Docker Hub上下载。
 # 指定我们的基础镜像是node，latest表示版本是最新
 FROM node:latest
-FROM nginx:latest
-
-COPY docker/default.conf /etc/nginx/conf.d/default.conf
-
-COPY ssl/ /etc/nginx/ssl
 
 # 定义工作目录
 WORKDIR /usr/src/app
