@@ -101,7 +101,7 @@ class AuthController {
   }
 
   async success(ctx: Koa.DefaultContext, next: () => Promise<any>) {
-    ctx.body = '授权成功jenkins~'
+    ctx.body = '授权成功jenkins哈哈哈哈哈~'
   }
 }
 
