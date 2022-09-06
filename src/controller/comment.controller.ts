@@ -49,7 +49,7 @@ class CommentController {
       // 返回结果
       ctx.body = {
         code: httpStatusCode.SUCCESS,
-        data: null,
+        data: result,
         msg: '回复评论成功~'
       }
     } catch (error) {

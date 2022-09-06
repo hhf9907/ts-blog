@@ -6,6 +6,7 @@ const { PUBLIC_KEY } = require('../app/config')
 import authService from '../service/auth.service'
 import userService from '../service/user.service'
 import { md5password, generateUserId, decrypt } from '../utils/password-handle'
+import { passwordKeyStr } from '../constants/auth.crypto'
 import errorTypes from '../constants/error-types'
 import userStatus from '../constants/user.status'
 import userTypes from '../constants/user.type'
@@ -19,7 +20,7 @@ const verifyLogin = async (
 
   // 1.获取用户名和密码
   const { name, passWord } = ctx.request.body
-  const password = decrypt(passWord) // 解密
+  const password = decrypt(passWord, passwordKeyStr) // 解密
   // 2.判断用户名和密码是否为空
   if (!name || !password) {
     const error = new Error(errorTypes.NAME_OR_PASSWORD_IS_REQUIRED)
@@ -66,7 +67,7 @@ const verifyRegister = async (
 
   // 1.获取用户名和密码
   const { name, passWord } = ctx.request.body
-  const password = decrypt(passWord) // 解密
+  const password = decrypt(passWord, passwordKeyStr) // 解密
   console.log(name, password)
   // 2.判断用户名和密码是否为空
   if (!name || !password) {
@@ -240,7 +241,7 @@ const verifyResetMailCode = async (
 
   // 1.获取所有信息
   const { email, code, token, passWord } = ctx.request.body
-  const password = decrypt(passWord)
+  const password = decrypt(passWord, passwordKeyStr)
 
   // 2.判断用户是否存在的
   const result = await userService.getUserByEmail(email)

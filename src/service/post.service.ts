@@ -74,6 +74,7 @@ class PostService {
   }
 
   async getPostById(postId: string) {
+    
     const statement = `SELECT 
     p.id AS postId, 
     p.user_id AS userId, 
@@ -86,7 +87,8 @@ class PostService {
     p.pv,
     edit_type AS editorType,
     p.category_ids AS categoryIds, 
-    p.create_time AS createTime
+    p.create_time AS createTime,
+    ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum
     FROM post AS p
     LEFT JOIN user AS u ON p.user_id = u.id 
     WHERE p.id = ?;`
@@ -98,7 +100,34 @@ class PostService {
   async queryPostList(params: queryCategoryParams, userId='') {
     const pageNum = Number(params.pageNum)
     const pageSize = Number(params.pageSize)
-    const statement = `SELECT SQL_CALC_FOUND_ROWS
+
+    // 条件
+    const whereStr = `
+    ${params.keyword || params.categoryId ? 'WHERE ' : ''}
+    ${
+      // 关键字查询
+      params.keyword
+        ? `(
+          p.post_name LIKE '%${params.keyword}%' || 
+          p.post_intro LIKE '%${params.keyword}%' || 
+          p.content LIKE '%${params.keyword}%' || 
+          p.creator LIKE '%${params.keyword}%'
+        )`
+        : ``
+      }
+    ${params.keyword && params.categoryId ? 'AND' : ''}
+    ${
+      // 查询分类
+      params.categoryId
+        ? `(p.category_ids LIKE '%,${params.categoryId},%' || 
+          p.category_ids LIKE '%${params.categoryId},%' || 
+          p.category_ids LIKE '%,${params.categoryId}%'
+          )`
+        : ``
+      }
+    `
+    // 查询文章列表的sql
+    const statement = `SELECT
     p.id AS postId, 
     u.name AS username, 
     u.nickname,
@@ -114,56 +143,15 @@ class PostService {
     FROM post AS p
     LEFT JOIN collect AS c  ON c.post_id = p.id
     LEFT JOIN user AS u ON p.user_id = u.id 
-    ${params.keyword || params.categoryId ? 'WHERE ' : ''}
-    ${
-      // 关键字查询
-      params.keyword
-        ? `(
-          p.post_name LIKE '%${params.keyword}%' || 
-          p.post_intro LIKE '%${params.keyword}%' || 
-          p.content LIKE '%${params.keyword}%' || 
-          p.creator LIKE '%${params.keyword}%'
-        )`
-        : ``
-      }
-    ${params.keyword && params.categoryId ? 'AND' : ''}
-    ${
-      // 查询分类
-      params.categoryId
-        ? `(p.category_ids LIKE '%,${params.categoryId},%' || 
-          p.category_ids LIKE '%${params.categoryId},%' || 
-          p.category_ids LIKE '%,${params.categoryId}%'
-          )`
-        : ``
-      }
+    ${whereStr}
     ORDER BY ${Number(params.queryType) === 1 ? 'p.create_time' : 'p.pv'} DESC
     LIMIT ${(pageNum - 1) * pageSize}, ${pageSize};
     `
-
+    // 查询总数的sql
     const query = `SELECT count(*) AS count 
     FROM post AS p
-    ${params.keyword || params.categoryId ? 'WHERE ' : ''}
-    ${
-      // 关键字查询
-      params.keyword
-        ? `(
-          p.post_name LIKE '%${params.keyword}%' || 
-          p.post_intro LIKE '%${params.keyword}%' || 
-          p.content LIKE '%${params.keyword}%' || 
-          p.creator LIKE '%${params.keyword}%'
-        )`
-        : ``
-      }
-    ${params.keyword && params.categoryId ? 'AND' : ''}
-    ${
-      // 查询分类
-      params.categoryId
-        ? `(p.category_ids LIKE '%,${params.categoryId},%' || 
-          p.category_ids LIKE '%${params.categoryId},%' || 
-          p.category_ids LIKE '%,${params.categoryId}%'
-          )`
-        : ``
-      }`
+    ${whereStr}`
+
     const result = await connection.execute(statement)
     const result1 = await connection.execute(query)
     const count = result1[0][0].count

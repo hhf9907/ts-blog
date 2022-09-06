@@ -1,5 +1,5 @@
-const crypto = require('crypto');
-const CryptoJS = require('crypto-js');
+const crypto = require('crypto')
+const CryptoJS = require('crypto-js')
 
 const guid = () => {
   let S4 = () => {
@@ -48,11 +48,11 @@ const generateCategoryId = (): string => {
   return 'C' + result
 }
 
-const keyStr = CryptoJS.enc.Utf8.parse('1234123412ABCDEF') //十六位十六进制数作为密钥
+// const keyStr = CryptoJS.enc.Utf8.parse('1234123412ABCDEF') //十六位十六进制数作为密钥
 const iv = CryptoJS.enc.Utf8.parse('ABCDEF1234123412') //十六位十六进制数作为密钥偏移量
 //解密
 // export function decrypt(word, keyStr){
-function decrypt(word: string) {
+function decrypt(word: string, keyStr: string) {
   const encryptedHexStr = CryptoJS.enc.Hex.parse(word)
   const srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr)
 
@@ -66,5 +66,23 @@ function decrypt(word: string) {
   return decryptedStr.toString()
 }
 
+//加密
+// export function encrypt(word, keyStr){
+function encrypt(word: string, keyStr: string) {
+  const srcs = CryptoJS.enc.Utf8.parse(word)
+  const encrypted = CryptoJS.AES.encrypt(srcs, keyStr, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return encrypted.ciphertext.toString()
+}
 
-export { md5password, generateUserId, generatePostId, generateCategoryId, decrypt }
+export {
+  md5password,
+  generateUserId,
+  generatePostId,
+  generateCategoryId,
+  decrypt,
+  encrypt
+}
