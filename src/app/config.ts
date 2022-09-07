@@ -31,7 +31,7 @@ const fileConfig = {
 
 
 enum mysqlConfig {
-  HOST = '127.0.0.1',
+  HOST = '1.12.251.216',
   DATABASE = 'ts_blog',
   USER = 'root',
   PASSWORD = 'root'
