@@ -16,6 +16,8 @@ postRouter.put(
 )
 postRouter.get('/getPostById/:postId', postController.getPost)
 postRouter.get('/list', getTokenUserInfo, postController.getPostList)
+postRouter.get('/getPostListByUserId',getTokenUserInfo, postController.queryPostListByUserId)
+
 postRouter.delete(
   '/:postId',
   verifyAuth,

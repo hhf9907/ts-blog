@@ -30,8 +30,7 @@ class PostService {
       categoryIds,
       editorType
     ])
-
-    return result
+    return result[0].insertId
   }
 
   async update(
@@ -74,7 +73,6 @@ class PostService {
   }
 
   async getPostById(postId: string) {
-    
     const statement = `SELECT 
     p.id AS postId, 
     p.user_id AS userId, 
@@ -97,7 +95,7 @@ class PostService {
     return result[0]
   }
 
-  async queryPostList(params: queryCategoryParams, userId='') {
+  async queryPostList(params: queryCategoryParams, userId = '') {
     const pageNum = Number(params.pageNum)
     const pageSize = Number(params.pageSize)
 
@@ -114,7 +112,7 @@ class PostService {
           p.creator LIKE '%${params.keyword}%'
         )`
         : ``
-      }
+    }
     ${params.keyword && params.categoryId ? 'AND' : ''}
     ${
       // 查询分类
@@ -124,7 +122,7 @@ class PostService {
           p.category_ids LIKE '%,${params.categoryId}%'
           )`
         : ``
-      }
+    }
     `
     // 查询文章列表的sql
     const statement = `SELECT
@@ -162,6 +160,43 @@ class PostService {
     }
   }
 
+  async queryPostListByUserId(queryType = 1, pageNum = 1, userId = '', loginUserId='') {
+    // 查询文章列表的sql
+    const statement = `SELECT
+    p.id AS postId, 
+    u.name AS username, 
+    u.nickname,
+    u.avatar,
+    p.user_id AS userId, 
+    p.post_name AS postName, 
+    p.post_intro AS postIntro,
+    if((c.user_id='${loginUserId}' && c.post_id=p.id) ,1,0) AS isCollect, 
+    ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum,
+    creator, pv,
+    p.category_ids AS categoryIds, 
+    p.create_time AS createTime
+    FROM post AS p
+    LEFT JOIN collect AS c  ON c.post_id = p.id
+    LEFT JOIN user AS u ON p.user_id = u.id 
+    WHERE p.user_id = '${userId}'
+    ORDER BY ${queryType === 1 ? 'p.create_time' : 'p.pv'} DESC
+    LIMIT ${(pageNum - 1) * 10}, 10;
+    `
+    // 查询总数的sql
+    const query = `SELECT count(*) AS count 
+    FROM post AS p
+    WHERE p.user_id = '${userId}'`
+
+    const result = await connection.execute(statement)
+    const result1 = await connection.execute(query)
+    const count = result1[0][0].count
+    return {
+      list: result[0],
+      count: count,
+      pages: Math.ceil(count / 10) // 向上取整
+    }
+  }
+
   async userPostPvTotal(userId: string) {
     const statement = `SELECT SUM(pv) AS pvTotal FROM post WHERE user_id = ?`
     const result = await connection.execute(statement, [userId])
@@ -185,12 +220,11 @@ class PostService {
 
   /**
    * 取消收藏
-   * @param userId 
-   * @param postId 
-   * @returns 
+   * @param userId
+   * @param postId
+   * @returns
    */
   async cancelCollectPost(userId: string, postId: string) {
-
     const statement = `DELETE FROM collect WHERE user_id='${userId}' AND post_id='${postId}'`
     const result = await connection.execute(statement, [userId, postId])
 

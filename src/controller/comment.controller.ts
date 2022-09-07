@@ -5,6 +5,9 @@ import commentService from '../service/comment.service'
 
 import httpStatusCode from '../constants/http.status'
 
+import dynamicService from '../service/dynamic.service'
+import dynamicType from '../constants/dynamic.type'
+
 class CommentController {
   // 获取用户信息
   async commentPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
@@ -17,6 +20,7 @@ class CommentController {
     }
     try {
       const result = await commentService.createComment(data)
+      dynamicService.create(userId, dynamicType.COMMENT_POST, postId, `评论了文章:${content}`)
       if (result) {
         // 返回结果
         ctx.body = {

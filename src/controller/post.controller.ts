@@ -3,6 +3,10 @@ import httpStatusCode from '../constants/http.status'
 import { generatePostId } from '../utils/password-handle'
 import postService from '../service/post.service'
 import commentService from '../service/comment.service'
+
+import dynamicService from '../service/dynamic.service'
+import dynamicType from '../constants/dynamic.type'
+
 class PostController {
   async createPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
@@ -21,6 +25,7 @@ class PostController {
         categoryIds,
         editorType
       )
+      dynamicService.create(userId, dynamicType.CREATE_POST, postId, `发布了文章:${postName}`)
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: null,
@@ -128,11 +133,40 @@ class PostController {
       queryType,
       categoryId
     }
-    
+
     const userId = ctx?.user?.userId
 
     try {
       const postList = await postService.queryPostList(params, userId)
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: postList,
+        msg: '获取文章列表成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取文章列表失败,请检查参数是否有误~'
+      }
+    }
+  }
+
+  // 查询用户文章列表
+  async queryPostListByUserId(
+    ctx: Koa.DefaultContext,
+    next: () => Promise<any>
+  ) {
+    // queryType 1 最新， 2 最热
+    const { queryType, userId, pageNum } = ctx.request.query
+    const loginUserId = ctx?.user?.userId
+    try {
+      const postList = await postService.queryPostListByUserId(
+        queryType,
+        pageNum,
+        userId,
+        loginUserId
+      )
       ctx.body = {
         code: httpStatusCode.SUCCESS,
         data: postList,
@@ -173,9 +207,9 @@ class PostController {
     const { postId } = ctx.params
     const { userId } = ctx.user
 
-    
     try {
       const result = await postService.collectPost(userId, postId)
+      dynamicService.create(userId, dynamicType.COLLECT_POST, postId, `收藏了该文章`)
       if (result) {
         ctx.body = {
           code: httpStatusCode.SUCCESS,
