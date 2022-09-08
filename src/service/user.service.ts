@@ -75,7 +75,7 @@ class UserService {
    */
   async getUserById(userId: string) {
     const statement = `SELECT
-    id AS userId, name, nickname, avatar, notes, phone, email,
+    id AS userId, name, nickname, avatar, notes, phone, email,create_time AS createTime,
     home_page AS homePage,
     (
       SELECT
@@ -171,6 +171,36 @@ class UserService {
     return {
       concerns: result[0][0].concerns,
       fans: result[0][0].fans
+    }
+  }
+
+  async queryConcernList(userId: string, pageNum=1, loginUserId='') {
+    const statement = `
+    SELECT 
+    u.id AS userId,
+    u.avatar,
+    if((SELECT COUNT(*) FROM relation  WHERE r.from_user_id = from_user_id AND to_user_id = '${loginUserId}') ,1,0) AS isConcern,
+    u.nickname
+    FROM relation as r
+    LEFT JOIN user AS u ON r.from_user_id = u.id
+    WHERE r.to_user_id='${userId}'
+    ORDER BY r.id DESC
+    LIMIT ${(pageNum - 1) * 10}, ${10};
+    `
+
+    const query = `
+    SELECT 
+    COUNT(*) AS count
+    FROM relation
+    WHERE to_user_id='${userId}'`
+
+    const result = await connection.execute(statement)
+    const result1 = await connection.execute(query)
+    const count = result1[0][0].count
+    return {
+      list: result[0],
+      count: count,
+      pages: Math.ceil(count / 10) // 向上取整
     }
   }
 }

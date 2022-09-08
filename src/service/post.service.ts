@@ -72,7 +72,7 @@ class PostService {
     return !!result[0].changedRows
   }
 
-  async getPostById(postId: string) {
+  async getPostById(postId: string, userId='') {
     const statement = `SELECT 
     p.id AS postId, 
     p.user_id AS userId, 
@@ -86,8 +86,10 @@ class PostService {
     edit_type AS editorType,
     p.category_ids AS categoryIds, 
     p.create_time AS createTime,
+    if((r.to_user_id='${userId}') ,1,0) AS isRelation, 
     ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum
     FROM post AS p
+    LEFT JOIN relation AS r  ON r.from_user_id = p.user_id AND r.to_user_id='${userId}'
     LEFT JOIN user AS u ON p.user_id = u.id 
     WHERE p.id = ?;`
     const result = await connection.execute(statement, [postId])
@@ -139,7 +141,7 @@ class PostService {
     p.category_ids AS categoryIds, 
     p.create_time AS createTime
     FROM post AS p
-    LEFT JOIN collect AS c  ON c.post_id = p.id
+    LEFT JOIN collect AS c  ON c.post_id = p.id AND c.user_id='${userId}'
     LEFT JOIN user AS u ON p.user_id = u.id 
     ${whereStr}
     ORDER BY ${Number(params.queryType) === 1 ? 'p.create_time' : 'p.pv'} DESC
@@ -161,6 +163,7 @@ class PostService {
   }
 
   async queryPostListByUserId(queryType = 1, pageNum = 1, userId = '', loginUserId='') {
+    console.log(loginUserId)
     // 查询文章列表的sql
     const statement = `SELECT
     p.id AS postId, 
@@ -170,13 +173,13 @@ class PostService {
     p.user_id AS userId, 
     p.post_name AS postName, 
     p.post_intro AS postIntro,
-    if((c.user_id='${loginUserId}' && c.post_id=p.id) ,1,0) AS isCollect, 
+    if((c.user_id='${loginUserId}') ,1,0) AS isCollect, 
     ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum,
     creator, pv,
     p.category_ids AS categoryIds, 
     p.create_time AS createTime
     FROM post AS p
-    LEFT JOIN collect AS c  ON c.post_id = p.id
+    LEFT JOIN collect AS c  ON c.post_id = p.id AND c.user_id='${loginUserId}'
     LEFT JOIN user AS u ON p.user_id = u.id 
     WHERE p.user_id = '${userId}'
     ORDER BY ${queryType === 1 ? 'p.create_time' : 'p.pv'} DESC
@@ -186,6 +189,43 @@ class PostService {
     const query = `SELECT count(*) AS count 
     FROM post AS p
     WHERE p.user_id = '${userId}'`
+
+    const result = await connection.execute(statement)
+    const result1 = await connection.execute(query)
+    const count = result1[0][0].count
+    return {
+      list: result[0],
+      count: count,
+      pages: Math.ceil(count / 10) // 向上取整
+    }
+  }
+
+  async queryPostListByCollections(queryType = 1, pageNum = 1, userId = '', loginUserId='') {
+    // 查询文章列表的sql
+    const statement = `SELECT
+    p.id AS postId, 
+    u.name AS username, 
+    u.nickname,
+    u.avatar,
+    p.user_id AS userId, 
+    p.post_name AS postName, 
+    p.post_intro AS postIntro,
+    if((SELECT COUNT(*) FROM collect AS c1 WHERE p.id = post_id AND user_id = '${loginUserId}') ,1,0) AS isCollect,
+    ( SELECT COUNT(*) FROM comment  WHERE p.id = post_id) + ( SELECT COUNT(*) FROM comment_reply WHERE p.id = post_id) AS commentNum,
+    creator, pv,
+    p.category_ids AS categoryIds, 
+    p.create_time AS createTime
+    FROM collect AS c
+    LEFT JOIN post AS p  ON c.post_id = p.id
+    LEFT JOIN user AS u ON p.user_id = u.id
+    WHERE c.user_id = '${userId}'
+    ORDER BY ${queryType === 1 ? 'p.create_time' : 'p.pv'} DESC
+    LIMIT ${(pageNum - 1) * 10}, 10;
+    `
+    // 查询总数的sql
+    const query = `SELECT count(*) AS count 
+    FROM collect AS c
+    WHERE c.user_id = '${userId}'`
 
     const result = await connection.execute(statement)
     const result1 = await connection.execute(query)

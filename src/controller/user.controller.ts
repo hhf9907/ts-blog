@@ -183,6 +183,30 @@ class UserController {
       msg: '查询关注与粉丝数成功~'
     }
   }
+
+  async queryConcernList(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // queryType 1 最新， 2 最热
+    const { userId, pageNum } = ctx.request.query
+    const loginUserId = ctx?.user?.userId
+    try {
+      const postList = await userService.queryConcernList(
+        userId,
+        pageNum,
+        loginUserId
+      )
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: postList,
+        msg: '关注列表成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取关注列表失败,请检查参数是否有误~'
+      }
+    }
+  }
 }
 
 export default new UserController()

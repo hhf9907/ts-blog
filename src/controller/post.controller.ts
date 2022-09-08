@@ -98,8 +98,9 @@ class PostController {
   async getPost(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.文章信息
     const { postId } = ctx.params
+    const userId = ctx?.user?.userId
     try {
-      const postInfo = await postService.getPostById(postId)
+      const postInfo = await postService.getPostById(postId, userId)
       await postService.incrementPv(postId)
       ctx.body = {
         code: httpStatusCode.SUCCESS,
@@ -162,6 +163,35 @@ class PostController {
     const loginUserId = ctx?.user?.userId
     try {
       const postList = await postService.queryPostListByUserId(
+        queryType,
+        pageNum,
+        userId,
+        loginUserId
+      )
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: postList,
+        msg: '获取文章列表成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取文章列表失败,请检查参数是否有误~'
+      }
+    }
+  }
+
+  // 查询用户收藏文章列表
+  async queryPostListByCollections(
+    ctx: Koa.DefaultContext,
+    next: () => Promise<any>
+  ) {
+    // queryType 1 最新， 2 最热
+    const { queryType, userId, pageNum } = ctx.request.query
+    const loginUserId = ctx?.user?.userId
+    try {
+      const postList = await postService.queryPostListByCollections(
         queryType,
         pageNum,
         userId,

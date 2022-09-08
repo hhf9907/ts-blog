@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 
-import { verifyAuth } from '../middleware/auth.middleware'
+import { verifyAuth, getTokenUserInfo } from '../middleware/auth.middleware'
 import userController from '../controller/user.controller'
 
 const userRouter = new Router({
@@ -23,5 +23,7 @@ userRouter.put('/updateBaseInfo', verifyAuth, userController.updateBaseInfo)
 userRouter.put('/updateAccountInfo', verifyAuth, userController.updateAccountInfo)
 
 userRouter.get('/queryConcernAndFans', verifyAuth, userController.queryConcernAndFans)
+
+userRouter.get('/queryConcernList', getTokenUserInfo, userController.queryConcernList)
 
 module.exports = userRouter

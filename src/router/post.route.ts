@@ -14,9 +14,10 @@ postRouter.put(
   verifyPermission,
   postController.updatePost
 )
-postRouter.get('/getPostById/:postId', postController.getPost)
+postRouter.get('/getPostById/:postId', getTokenUserInfo, postController.getPost)
 postRouter.get('/list', getTokenUserInfo, postController.getPostList)
 postRouter.get('/getPostListByUserId',getTokenUserInfo, postController.queryPostListByUserId)
+postRouter.get('/getPostListByCollections',getTokenUserInfo, postController.queryPostListByCollections)
 
 postRouter.delete(
   '/:postId',
