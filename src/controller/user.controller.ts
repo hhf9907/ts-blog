@@ -24,7 +24,8 @@ class UserController {
   // 获取用户信息
   async getUserInfoById(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { userId } = ctx.params
-    const result = await userService.getUserById(userId)
+    const loginUserId = ctx?.user?.userId
+    const result = await userService.getUserById(userId, loginUserId)
     // 返回结果
     ctx.body = {
       code: httpStatusCode.SUCCESS,
@@ -115,12 +116,13 @@ class UserController {
   async concernUser(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     const { fromUserId } = ctx.params
     const { userId } = ctx.user
-    if (userId === fromUserId) {
+    if (userId.trim() === fromUserId.trim()) {
       ctx.body = {
         code: httpStatusCode.PARAMETER_ERROR,
         data: null,
         msg: '您不能关注自己哦~'
       }
+      return
     }
     try {
       const data = await userService.concernUser(userId, fromUserId)
@@ -207,6 +209,31 @@ class UserController {
       }
     }
   }
+
+  async queryFansList(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+    // queryType 1 最新， 2 最热
+    const { userId, pageNum } = ctx.request.query
+    const loginUserId = ctx?.user?.userId
+    try {
+      const postList = await userService.queryFansList(
+        userId,
+        pageNum,
+        loginUserId
+      )
+      ctx.body = {
+        code: httpStatusCode.SUCCESS,
+        data: postList,
+        msg: '关注列表成功~'
+      }
+    } catch (error) {
+      ctx.body = {
+        code: httpStatusCode.PARAMETER_ERROR,
+        data: null,
+        msg: '获取关注列表失败,请检查参数是否有误~'
+      }
+    }
+  }
+  
 }
 
 export default new UserController()

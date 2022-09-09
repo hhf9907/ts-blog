@@ -73,19 +73,19 @@ class UserService {
    * @param name
    * @returns
    */
-  async getUserById(userId: string) {
+  async getUserById(userId: string, loginUserId='') {
     const statement = `SELECT
     id AS userId, name, nickname, avatar, notes, phone, email,create_time AS createTime,
     home_page AS homePage,
     (
       SELECT
-      COUNT(r.id) 
+      COUNT(*) 
       FROM relation AS r 
       WHERE r.to_user_id = '${userId}'
     ) AS concerns,
     (
       SELECT
-      COUNT(r.id) 
+      COUNT(*) 
       FROM relation AS r 
       WHERE r.from_user_id = '${userId}'
     ) AS fans,
@@ -97,10 +97,17 @@ class UserService {
     ) AS pvTotal ,
     (
       SELECT
-      COUNT(c.id) 
+      COUNT(*) 
       FROM collect AS c 
       WHERE c.user_id = '${userId}'
-    ) AS collectTotal 
+    ) AS collectTotal ,
+    (
+      SELECT
+      COUNT(*) 
+      FROM post AS p , collect AS c
+      WHERE p.user_id = '${userId}' AND c.post_id = p.id
+    ) AS beCollectedTotal ,
+    if((SELECT COUNT(*) FROM relation  WHERE from_user_id='${userId}' AND to_user_id = '${loginUserId}') ,1,0) AS isConcern
     FROM user WHERE id = ?;`
     const result = await connection.execute(statement, [userId])
 
@@ -179,12 +186,12 @@ class UserService {
     SELECT 
     u.id AS userId,
     u.avatar,
-    if((SELECT COUNT(*) FROM relation  WHERE r.from_user_id = from_user_id AND to_user_id = '${loginUserId}') ,1,0) AS isConcern,
+    if((SELECT COUNT(*) FROM relation WHERE to_user_id = '${loginUserId}' AND from_user_id = u.id) ,1,0) AS isConcern,
     u.nickname
     FROM relation as r
     LEFT JOIN user AS u ON r.from_user_id = u.id
     WHERE r.to_user_id='${userId}'
-    ORDER BY r.id DESC
+    ORDER BY r.create_time DESC
     LIMIT ${(pageNum - 1) * 10}, ${10};
     `
 
@@ -193,6 +200,37 @@ class UserService {
     COUNT(*) AS count
     FROM relation
     WHERE to_user_id='${userId}'`
+
+    const result = await connection.execute(statement)
+    const result1 = await connection.execute(query)
+    const count = result1[0][0].count
+    return {
+      list: result[0],
+      count: count,
+      pages: Math.ceil(count / 10) // 向上取整
+    }
+  }
+
+  async queryFansList(userId: string, pageNum=1, loginUserId='') {
+    console.log(loginUserId)
+    const statement = `
+    SELECT 
+    u.id AS userId,
+    u.avatar,
+    if((SELECT COUNT(*) FROM relation WHERE to_user_id = '${loginUserId}' AND from_user_id = u.id) ,1,0) AS isConcern,
+    u.nickname
+    FROM relation as r
+    LEFT JOIN user AS u ON r.to_user_id = u.id
+    WHERE r.from_user_id='${userId}'
+    ORDER BY r.create_time DESC
+    LIMIT ${(pageNum - 1) * 10}, ${10};
+    `
+
+    const query = `
+    SELECT 
+    COUNT(*) AS count
+    FROM relation
+    WHERE from_user_id='${userId}'`
 
     const result = await connection.execute(statement)
     const result1 = await connection.execute(query)
