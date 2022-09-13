@@ -39,4 +39,5 @@ postRouter.post(
   verifyAuth,
   postController.cancelCollectPost
 )
+
 module.exports = postRouter

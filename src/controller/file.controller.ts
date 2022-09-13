@@ -21,11 +21,7 @@ class FileController {
     await userService.updateAvatarUrlById(avatarUrl, userId)
 
     // 4.返回结果
-    ctx.body = {
-      code: httpStatusCode.SUCCESS,
-      data: avatarUrl,
-      msg: '头像上传成功~'
-    }
+    ctx.success(httpStatusCode.SUCCESS, avatarUrl, '头像上传成功~')
   }
 
   // 获取头像信息
@@ -56,17 +52,9 @@ class FileController {
         )
       }
 
-      ctx.body = {
-        code: httpStatusCode.SUCCESS,
-        data: fileNames,
-        msg: '图片上传成功~'
-      }
+      ctx.success(httpStatusCode.SUCCESS, fileNames, '图片上传成功~')
     } catch (error) {
-      ctx.body = {
-        code: httpStatusCode.PARAMETER_ERROR,
-        data: null,
-        msg: '图片上传失败~'
-      }
+      ctx.error(httpStatusCode.PARAMETER_ERROR, null, '图片上传失败~')
     }
   }
 

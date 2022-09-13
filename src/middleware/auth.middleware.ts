@@ -13,7 +13,7 @@ import userTypes from '../constants/user.type'
 import codeManager from '../sms/codeManage'
 
 const verifyLogin = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证登录的middleware~')
@@ -60,7 +60,7 @@ const verifyLogin = async (
 
 // 注册用户
 const verifyRegister = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证注册的middleware~')
@@ -95,7 +95,7 @@ const verifyRegister = async (
 }
 
 const verifyAuth = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证授权的middleware~')
@@ -128,7 +128,7 @@ const verifyAuth = async (
  * @returns 
  */
 const getTokenUserInfo = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证授权的middleware~')
@@ -158,7 +158,7 @@ const getTokenUserInfo = async (
  *  多对多: role -> menu(删除动态/修改动态)
  */
 const verifyPermission = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证权限的middleware~')
@@ -191,7 +191,7 @@ const verifyPermission = async (
 }
 
 const verifyMailCode = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证邮箱登录的middleware')
@@ -234,7 +234,7 @@ const verifyMailCode = async (
 }
 
 const verifyResetMailCode = async (
-  ctx: Koa.DefaultContext,
+  ctx: Koa.Context,
   next: () => Promise<any>
 ) => {
   console.log('验证邮箱找回密码的middleware')

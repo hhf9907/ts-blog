@@ -6,7 +6,7 @@ import service from '../service/category.service'
 import errorTypes from '../constants/error-types'
 
 class CategoryController {
-  async createCategory(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+  async createCategory(ctx: Koa.Context, next: () => Promise<any>) {
     const { categoryName }: { categoryName: string } = ctx.request.body
     const { name }: { name: string } = ctx.user
 
@@ -34,38 +34,22 @@ class CategoryController {
 
     try {
       await service.create(categoryInfo)
-      ctx.body = {
-        code: httpStatusCode.SUCCESS,
-        data: null,
-        msg: '分类创建成功'
-      }
+      ctx.success(httpStatusCode.SUCCESS, null, '分类创建成功')
     } catch (error) {
-      ctx.body = {
-        code: httpStatusCode.PARAMETER_ERROR,
-        data: null,
-        msg: '分类创建失败'
-      }
+      ctx.error(httpStatusCode.PARAMETER_ERROR, null, '分类创建失败')
     }
   }
 
-  async getAllCategory(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+  async getAllCategory(ctx: Koa.Context, next: () => Promise<any>) {
     try {
       const result = await service.getAllCategory()
-      ctx.body = {
-        code: httpStatusCode.SUCCESS,
-        data: result,
-        msg: '查询分类成功'
-      }
+      ctx.success(httpStatusCode.SUCCESS, result, '查询分类成功')
     } catch (error) {
-      ctx.body = {
-        code: httpStatusCode.PARAMETER_ERROR,
-        data: null,
-        msg: '查询分类失败'
-      }
+      ctx.error(httpStatusCode.PARAMETER_ERROR, null, '查询分类失败')
     }
   }
 
-  async success(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+  async success(ctx: Koa.Context, next: () => Promise<any>) {
     ctx.body = '授权成功~'
   }
 }
