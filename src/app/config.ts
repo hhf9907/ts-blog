@@ -21,7 +21,7 @@ console.log('ip地址：', IPv4)
 const appConfig = {
   // HOST: 'http://' + IPv4,
   HOST: process.env.NODE_ENV === 'production' ? 'https://blog-api.coderhhf.cn' : 'http://127.0.0.1:3000',
-  PORT: 3000
+  PORT: 3002
 }
 
 const fileConfig = {

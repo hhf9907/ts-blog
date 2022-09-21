@@ -26,4 +26,6 @@ uploadRouter.post(
 // 动态配图的服务
 uploadRouter.get('/file/files/:filename', fileController.fileInfo)
 
+uploadRouter.get('/upload/getUploadToken', verifyAuth, fileController.getUploadToken)
+
 module.exports = uploadRouter

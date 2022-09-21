@@ -6,6 +6,8 @@ import userService from '../service/user.service'
 import httpStatusCode from '../constants/http.status'
 import { appConfig } from '../app/config'
 import filePath from '../constants/file-path'
+
+import { getUploadToken } from '../qiniu/index'
 class FileController {
   async saveAvatarInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
     // 1.获取图像相关的信息
@@ -70,6 +72,17 @@ class FileController {
 
     ctx.response.set('content-type', fileInfo.mimetype)
     ctx.body = fs.createReadStream(`${filePath.PICTURE_PATH}/${filename}`)
+  }
+
+  async getUploadToken(ctx: Koa.Context, next: () => Promise<any>) {
+    const qiniuToken = await getUploadToken()
+    
+    try {
+      ctx.success(httpStatusCode.SUCCESS, qiniuToken, '获取七牛云token成功~')
+    } catch (error) {
+      console.log('error')
+      ctx.error(httpStatusCode.PARAMETER_ERROR, null, '获取七牛云token失败~')
+    }
   }
 }
 
