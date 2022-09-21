@@ -5,6 +5,7 @@ import {
   verifyLogin,
   verifyRegister,
   verifyAuth,
+  getTokenUserInfo,
   verifyMailCode,
   verifyResetMailCode
 } from '../middleware/auth.middleware'
@@ -13,14 +14,14 @@ const authRouter = new Router()
 
 authRouter.post('/login', verifyLogin, authController.login)
 authRouter.post('/register', verifyRegister, authController.register)
-authRouter.post('/sendEmailCode', authController.sendMailCode)
+authRouter.post('/sendEmailCode',getTokenUserInfo, authController.sendMailCode)
 authRouter.post('/emailLogin', verifyMailCode, authController.login)
 
-authRouter.post('/sendResetEmailCode', authController.sendResetMailCode)
+authRouter.post('/sendResetEmailCode',getTokenUserInfo, authController.sendResetMailCode)
 authRouter.post('/resetPassword', verifyResetMailCode, authController.resetPassword)
 
 authRouter.get('/test', verifyAuth, authController.success)
-authRouter.get('/test1', authController.success)
+authRouter.get('/test1',getTokenUserInfo, authController.success)
 // authRouter.routes()
 
 module.exports = authRouter

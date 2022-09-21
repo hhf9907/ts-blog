@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 
-import { verifyAuth } from '../middleware/auth.middleware'
+import { verifyAuth,getTokenUserInfo } from '../middleware/auth.middleware'
 import categoryController from '../controller/category.controller'
 
 const categoryRouter = new Router({
@@ -10,6 +10,7 @@ const categoryRouter = new Router({
 categoryRouter.post('/create', verifyAuth, categoryController.createCategory)
 categoryRouter.get(
   '/getAllCategory',
+  getTokenUserInfo,
   categoryController.getAllCategory
 )
 

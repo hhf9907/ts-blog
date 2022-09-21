@@ -25,7 +25,7 @@ const pictureResize = async (
     const files = ctx.req.files
 
     // 2.对图像进行处理(sharp/jimp)
-    const imgTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif']
+    const imgTypes = ['image/png', 'image/jpeg', 'image/jpg']
     for (let file of files) {
       if (imgTypes.includes(file.mimetype)) {
         const destPath = path.join(file.destination, file.filename)

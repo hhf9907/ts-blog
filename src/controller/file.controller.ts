@@ -54,11 +54,12 @@ class FileController {
 
       ctx.success(httpStatusCode.SUCCESS, fileNames, '图片上传成功~')
     } catch (error) {
+      console.log('error')
       ctx.error(httpStatusCode.PARAMETER_ERROR, null, '图片上传失败~')
     }
   }
 
-  async fileInfo(ctx: Koa.DefaultContext, next: () => Promise<any>) {
+  async fileInfo(ctx: Koa.Context, next: () => Promise<any>) {
     let { filename } = ctx.params
     const fileInfo = await fileService.getFileByFilename(filename)
     const { type } = ctx.query

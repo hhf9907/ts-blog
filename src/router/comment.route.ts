@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 
 import commentController from '../controller/comment.controller'
-import { verifyPermission, verifyAuth } from '../middleware/auth.middleware'
+import { verifyPermission, verifyAuth,getTokenUserInfo } from '../middleware/auth.middleware'
 
 const commentRouter = new Router({
   prefix: '/comment'
@@ -25,6 +25,6 @@ commentRouter.delete(
   verifyPermission,
   commentController.deleteComment
 )
-commentRouter.get('/queryComment', commentController.queryComment) // 获取评论不需要登录
+commentRouter.get('/queryComment', getTokenUserInfo, commentController.queryComment) // 获取评论不需要登录
 
 module.exports = commentRouter

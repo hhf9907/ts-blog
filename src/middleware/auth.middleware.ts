@@ -95,7 +95,7 @@ const verifyRegister = async (
 }
 
 const verifyAuth = async (
-  ctx: Koa.Context,
+  ctx: Koa.DefaultContext,
   next: () => Promise<any>
 ) => {
   console.log('验证授权的middleware~')
@@ -158,7 +158,7 @@ const getTokenUserInfo = async (
  *  多对多: role -> menu(删除动态/修改动态)
  */
 const verifyPermission = async (
-  ctx: Koa.Context,
+  ctx: Koa.DefaultContext,
   next: () => Promise<any>
 ) => {
   console.log('验证权限的middleware~')
