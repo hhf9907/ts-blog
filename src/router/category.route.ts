@@ -1,9 +1,9 @@
 import Router from 'koa-router'
-
+import Koa from 'koa'
 import { verifyAuth,getTokenUserInfo } from '../middleware/auth.middleware'
 import categoryController from '../controller/category.controller'
 
-const categoryRouter = new Router({
+const categoryRouter = new Router<Koa.Context, any>({
   prefix: '/category'
 })
 

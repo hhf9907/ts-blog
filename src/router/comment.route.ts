@@ -1,9 +1,9 @@
 import Router from 'koa-router'
-
+import Koa from 'koa'
 import commentController from '../controller/comment.controller'
 import { verifyPermission, verifyAuth,getTokenUserInfo } from '../middleware/auth.middleware'
 
-const commentRouter = new Router({
+const commentRouter = new Router<Koa.Context, any>({
   prefix: '/comment'
 })
 

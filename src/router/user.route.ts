@@ -1,9 +1,9 @@
 import Router from 'koa-router'
-
+import Koa from 'koa'
 import { verifyAuth, getTokenUserInfo } from '../middleware/auth.middleware'
 import userController from '../controller/user.controller'
 
-const userRouter = new Router({
+const userRouter = new Router<Koa.Context, any>({
   prefix: '/user'
 })
 

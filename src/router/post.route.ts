@@ -1,9 +1,9 @@
 import Router from 'koa-router'
-
+import Koa from 'koa'
 import postController from '../controller/post.controller'
 import { verifyPermission, verifyAuth, getTokenUserInfo } from '../middleware/auth.middleware'
 
-const postRouter = new Router({
+const postRouter = new Router<Koa.Context, any>({
   prefix: '/post'
 })
 

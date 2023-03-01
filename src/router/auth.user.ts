@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-
+import Koa from 'koa'
 import authController from '../controller/auth.controller'
 import {
   verifyLogin,
@@ -10,7 +10,7 @@ import {
   verifyResetMailCode
 } from '../middleware/auth.middleware'
 
-const authRouter = new Router()
+const authRouter = new Router<Koa.Context, any>()
 
 authRouter.post('/login', verifyLogin, authController.login)
 authRouter.post('/register', verifyRegister, authController.register)

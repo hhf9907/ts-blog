@@ -20,19 +20,19 @@ console.log('ip地址：', IPv4)
 // 43.139.46.91  1.12.251.216
 const appConfig = {
   // HOST: 'http://' + IPv4,
-  HOST: process.env.NODE_ENV === 'production' ? 'https://blog-api.coderhhf.cn' : 'http://127.0.0.1:3000',
-  PORT: 3002
+  HOST: process.env.NODE_ENV === 'production' ? 'http://127.0.0.1:3000' : 'http://127.0.0.1:3000',
+  PORT: 3000
 }
 
 const fileConfig = {
   // HOST: 'http://' + IPv4,
-  HOST: 'https://blog-api.coderhhf.cn'
+  HOST: 'http://127.0.0.1:3000'
 }
 
 
 enum mysqlConfig {
-  HOST = '1.12.251.216',
-  DATABASE = 'ts_blog',
+  HOST = '127.0.0.1',
+  DATABASE = 'blog',
   USER = 'root',
   PASSWORD = 'root'
 }
